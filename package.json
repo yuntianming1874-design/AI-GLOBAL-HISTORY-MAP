@@ -16,7 +16,11 @@
     "audit:history": "tsx scripts/audit-history-data.ts",
     "test:interaction": "esbuild scripts/timeline-interaction.test.tsx --bundle --platform=node --format=cjs --jsx=automatic --packages=external --outfile=.tmp-tl-test.cjs && node scripts/tl-harness.cjs && rm -f .tmp-tl-test.cjs",
     "test:provenance": "tsx scripts/provenance.test.ts",
-    "test:journey": "tsx scripts/journey.test.ts"
+    "test:journey": "tsx scripts/journey.test.ts",
+    "test:narrative": "tsx scripts/journey-narrative.test.ts",
+    "test:lifespan": "tsx scripts/person-lifespan.test.ts",
+    "test:world": "tsx scripts/world-context.test.ts",
+    "test:journey-integration": "tsx scripts/journey-integration.test.ts"
   },
   "dependencies": {
     "d3": "^7.9.0",

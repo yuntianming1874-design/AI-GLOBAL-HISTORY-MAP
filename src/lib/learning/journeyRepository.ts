@@ -60,6 +60,25 @@ function validateJourneys(): void {
           problems.push(`${j.slug}/${s.id}: unknown or type-mismatched entity ${ref.type}:${ref.id}`);
         }
       }
+      // V0.3 Phase 2 fields: grouped id lists + key facts must reference
+      // known entities. keyFactEntityIds may mix types (event/person/civ/loc);
+      // people/locations/civilizations must match their declared type.
+      const grouped: [string, string[], HistoryEntityType | null][] = [
+        ["keyFactEntityIds", s.keyFactEntityIds ?? [], null],
+        ["people", s.people ?? [], "person"],
+        ["locations", s.locations ?? [], "location"],
+        ["civilizations", s.civilizations ?? [], "civilization"],
+      ];
+      for (const [field, ids, type] of grouped) {
+        for (const id of ids) {
+          const actual = KNOWN_ENTITY_IDS.get(id);
+          if (actual === undefined) {
+            problems.push(`${j.slug}/${s.id}: ${field} contains unknown id ${id}`);
+          } else if (type !== null && actual !== type) {
+            problems.push(`${j.slug}/${s.id}: ${field} id ${id} is ${actual}, expected ${type}`);
+          }
+        }
+      }
     }
   }
   if (problems.length > 0) {

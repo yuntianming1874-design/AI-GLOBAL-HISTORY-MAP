@@ -8,6 +8,7 @@ import { nextStep, prevStep } from "@/lib/learning/journeyEngine";
 import { StoryPanel } from "./StoryPanel";
 import { Timeline } from "./Timeline";
 import { HistoryMap } from "./HistoryMap";
+import { PersonLifespanTimeline } from "./PersonLifespanTimeline";
 import { ContemporaryWorldPanel } from "./ContemporaryWorldPanel";
 import { Icon } from "@/components/ui/icons";
 
@@ -143,6 +144,12 @@ export function JourneyExplorer({ className = "" }: { className?: string }) {
 
       {/* map */}
       <HistoryMap className="min-w-0" />
+
+      {/* people alive at this step's year (lifespan + roles + events) */}
+      <PersonLifespanTimeline
+        year={step.year ?? null}
+        personId={step.personId ?? undefined}
+      />
 
       {/* contemporary world (data-driven, current step year) */}
       <ContemporaryWorldPanel year={step.year ?? null} />

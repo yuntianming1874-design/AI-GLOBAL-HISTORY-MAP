@@ -15,7 +15,9 @@ import { formatHistoricalDate, formatYearSpan } from "../provenance";
 import type { Journey, JourneyStep, HistoricalNarration } from "./journeyTypes";
 
 import {
+  civilizations,
   events,
+  locations,
   people,
 } from "@/data/seed";
 
@@ -71,17 +73,31 @@ export function narrateStep(
   const keyFacts: HistoricalNarration["keyFacts"] = [];
   const uncertaintyNotes: string[] = [];
 
-  // primary event fact
-  if (step.eventId) {
-    const e = eventById.get(step.eventId);
+  // Fact resolution order (V0.3 Phase 2):
+  //  1. step.keyFactEntityIds (explicit, curated) — any known entity type
+  //  2. fallback: primary event + surrounding events + primary person
+  const orderedIds: string[] =
+    step.keyFactEntityIds && step.keyFactEntityIds.length > 0
+      ? step.keyFactEntityIds
+      : [
+          ...(step.eventId ? [step.eventId] : []),
+          ...step.surroundingEntities.filter((r) => r.type === "event").map((r) => r.id),
+          ...(step.personId ? [step.personId] : []),
+        ];
+
+  const seen = new Set<string>();
+  for (const id of orderedIds) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const e = eventById.get(id);
     if (e) {
-      const dp = e.dateProvenance;
       keyFacts.push({
         entityId: e.id,
         entityType: "event",
         label: zh ? e.chineseTitle : e.title,
-        dateDisplay: formatYearSpan(e.year, e.yearEnd, dp, locale),
+        dateDisplay: formatYearSpan(e.year, e.yearEnd, e.dateProvenance, locale),
       });
+      const dp = e.dateProvenance;
       if (dp?.confidence === "disputed" || dp?.precision === "unknown") {
         uncertaintyNotes.push(
           zh
@@ -89,25 +105,9 @@ export function narrateStep(
             : `${e.title} has an uncertain date (${formatHistoricalDate(dp, locale)}).`,
         );
       }
+      continue;
     }
-  }
-  // surrounding entity facts
-  for (const ref of step.surroundingEntities) {
-    if (ref.type === "event" && ref.id !== step.eventId) {
-      const e = eventById.get(ref.id);
-      if (e) {
-        keyFacts.push({
-          entityId: e.id,
-          entityType: "event",
-          label: zh ? e.chineseTitle : e.title,
-          dateDisplay: formatYearSpan(e.year, e.yearEnd, e.dateProvenance, locale),
-        });
-      }
-    }
-  }
-  // primary person fact (lifespan + role spans)
-  if (step.personId) {
-    const p = personById.get(step.personId);
+    const p = personById.get(id);
     if (p) {
       keyFacts.push({
         entityId: p.id,
@@ -134,6 +134,26 @@ export function narrateStep(
             : `${p.name}'s death year is scholarly disputed.`,
         );
       }
+      continue;
+    }
+    // civilization / location facts (no date display unless span known)
+    const c = civilizations.find((x) => x.id === id);
+    if (c) {
+      keyFacts.push({
+        entityId: c.id,
+        entityType: "civilization",
+        label: zh ? c.chineseName : c.name,
+        dateDisplay: `${c.startYear}–${c.endYear}`,
+      });
+      continue;
+    }
+    const l = locations.find((x) => x.id === id);
+    if (l) {
+      keyFacts.push({
+        entityId: l.id,
+        entityType: "location",
+        label: zh ? l.chineseName : l.name,
+      });
     }
   }
 

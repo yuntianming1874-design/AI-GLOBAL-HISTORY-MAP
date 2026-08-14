@@ -18,10 +18,26 @@ export interface JourneyStep {
   order: number;
   title: string;
   titleEn: string;
+  /** 核心历史问题（Story Panel 以问题开头）。 */
+  question: string;
+  questionEn: string;
   /** Editorial narrative (zh). May name figures (e.g. 高仙芝) but never
    *  reference them as clickable entities unless they exist in the seed. */
   narrative: string;
   narrativeEn: string;
+  /** 为什么重要——数据驱动（narrator 模板仅作 fallback）。 */
+  whyImportant: string;
+  whyImportantEn: string;
+  /** 为什么接下来会发生什么（step N → step N+1 的因果衔接）。 */
+  nextStepReason: string;
+  nextStepReasonEn: string;
+  /** 关键事实实体（必须存在于 seed；缺省时 narrator 从 step 实体派生）。 */
+  keyFactEntityIds?: string[];
+  /** 分组展示：相关人物 / 文明 / 地点（必须存在于 seed；缺省回退
+   *  surroundingEntities 按 type 派生——不建立第二套数据源）。 */
+  people?: string[];
+  locations?: string[];
+  civilizations?: string[];
   /** History-context patch this step applies when entered. */
   year?: number;
   startYear?: number;

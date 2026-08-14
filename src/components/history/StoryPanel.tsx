@@ -9,11 +9,19 @@ import { useLocale } from "./LocaleProvider";
 import { useExplorer } from "./ExplorerProvider";
 
 /**
- * V0.3 — Historical Story Panel.
+ * V0.3 Phase 2 — Historical Story Panel (Narrative Story Engine).
  *
- * Editorial magazine/exhibit style (NOT a chat window):
- * journey title · step index · step title · time · narrative ·
- * why-it-matters (narrator) · related entity chips · prev/next.
+ * Continuous, readable editorial narrative — NOT fragmented cards:
+ *
+ *   [Step 标题] [Step 序号]
+ *   [核心历史问题]          ← question
+ *   [历史叙述]             ← narrative
+ *   [为什么重要]           ← whyImportant (data-driven)
+ *   [关键事实]             ← narrator keyFacts (repository-backed)
+ *   [为什么接下来会发生什么] ← nextStepReason
+ *   [相关人物 / 文明 / 地点] ← grouped entity chips
+ *   [← Previous | Continue →]
+ *
  * Facts come from the seed repository via narrateStep — no fabrication.
  */
 export function StoryPanel({
@@ -45,6 +53,27 @@ export function StoryPanel({
     return zh ? "年代不限" : "Across time";
   }, [step, locale, zh]);
 
+  /* grouped related entities — explicit grouped ids win, otherwise derived
+   * from surroundingEntities by type (single data source). */
+  const groups = useMemo(() => {
+    const byType = new Map<string, { id: string; type: string }[]>();
+    for (const ref of step.surroundingEntities) {
+      const list = byType.get(ref.type) ?? [];
+      list.push({ id: ref.id, type: ref.type });
+      byType.set(ref.type, list);
+    }
+    const pick = (type: string, explicit: string[] | undefined) => {
+      const ids = explicit && explicit.length > 0 ? explicit : (byType.get(type) ?? []).map((x) => x.id);
+      return ids.map((id) => ({ id, type }));
+    };
+    return {
+      people: pick("person", step.people),
+      civilizations: pick("civilization", step.civilizations),
+      locations: pick("location", step.locations),
+      events: byType.get("event") ?? [],
+    };
+  }, [step]);
+
   const chipAction = (type: string, id: string) => {
     switch (type) {
       case "event":
@@ -62,15 +91,33 @@ export function StoryPanel({
     }
   };
 
+  const renderChips = (list: { id: string; type: string }[]) =>
+    list.length > 0 ? (
+      <div className="flex flex-wrap gap-1.5">
+        {list.map((ref) => (
+          <button
+            key={`${ref.type}:${ref.id}`}
+            onClick={() => chipAction(ref.type, ref.id)}
+            className="chip transition hover:border-gold hover:shadow-sm"
+            aria-label={t("journey.openEntity", { id: ref.id })}
+          >
+            {ref.id}
+          </button>
+        ))}
+      </div>
+    ) : (
+      <p className="text-[12px] italic text-ink-faint">{t("journey.noRelated")}</p>
+    );
+
   return (
-    <article className="panel flex flex-col gap-4 p-5">
-      {/* journey + step header */}
+    <article className="panel flex flex-col gap-5 p-5 sm:p-6">
+      {/* step header */}
       <header>
         <p className="text-[11px] font-semibold uppercase tracking-wide text-gold-dark">
           {zh ? journey.title : journey.titleEn}
         </p>
         <div className="mt-1 flex items-baseline gap-2">
-          <h2 className="font-display text-lg font-bold leading-snug text-ink">
+          <h2 className="font-display text-xl font-bold leading-snug text-ink">
             {zh ? step.title : step.titleEn}
           </h2>
           <span className="ml-auto shrink-0 font-mono text-xs text-ink-faint">
@@ -83,19 +130,24 @@ export function StoryPanel({
         <p className="mt-1 font-mono text-xs text-ink-faint">{timeLabel}</p>
       </header>
 
-      {/* narrative */}
+      {/* core historical question */}
+      <p className="rounded-lg border-l-4 border-gold bg-gold/5 px-4 py-3 font-display text-base font-semibold leading-relaxed text-ink">
+        {zh ? step.question : step.questionEn}
+      </p>
+
+      {/* narrative — continuous prose */}
       <div className="space-y-3 text-sm leading-relaxed text-ink-soft">
         <p>{zh ? step.narrative : step.narrativeEn}</p>
       </div>
 
-      {/* why it matters (narrator importance) */}
-      <section className="rounded-lg border border-parchment-200 bg-parchment-100/60 p-3.5">
+      {/* why it matters (data-driven) */}
+      <section className="rounded-lg border border-parchment-200 bg-parchment-100/60 p-4">
         <h3 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-vermilion-dark">
           <Icon name="sparkles" className="h-3.5 w-3.5" />
           {t("journey.whyItMatters")}
         </h3>
         <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">
-          {narration.importance}
+          {zh ? step.whyImportant : step.whyImportantEn}
         </p>
         {narration.uncertaintyNotes && narration.uncertaintyNotes.length > 0 && (
           <div className="mt-2 space-y-1 border-t border-parchment-200 pt-2">
@@ -132,29 +184,54 @@ export function StoryPanel({
         </section>
       )}
 
-      {/* related entities */}
-      {narration.relatedEntities.length > 0 && (
-        <section>
-          <h3 className="text-xs font-bold uppercase tracking-wide text-ink-faint">
-            {t("journey.relatedEntities")}
-          </h3>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
-            {narration.relatedEntities.map((ref) => (
-              <button
-                key={`${ref.type}:${ref.id}`}
-                onClick={() => chipAction(ref.type, ref.id)}
-                className="chip transition hover:border-gold hover:shadow-sm"
-                aria-label={t("journey.openEntity", { id: ref.id })}
-              >
-                {ref.id}
-              </button>
-            ))}
+      {/* why next happens (causal bridge) */}
+      <section className="rounded-lg border border-parchment-200 bg-parchment-50/70 p-4">
+        <h3 className="text-xs font-bold uppercase tracking-wide text-ink-faint">
+          {t("journey.nextStepReason")}
+        </h3>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">
+          {zh ? step.nextStepReason : step.nextStepReasonEn}
+        </p>
+      </section>
+
+      {/* grouped related entities */}
+      <section className="space-y-3">
+        {groups.people.length > 0 && (
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-ink-faint">
+              {t("journey.relatedPeople")}
+            </h3>
+            <div className="mt-1.5">{renderChips(groups.people)}</div>
           </div>
-        </section>
-      )}
+        )}
+        {groups.civilizations.length > 0 && (
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-ink-faint">
+              {t("journey.relatedCivilizations")}
+            </h3>
+            <div className="mt-1.5">{renderChips(groups.civilizations)}</div>
+          </div>
+        )}
+        {groups.locations.length > 0 && (
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-ink-faint">
+              {t("journey.relatedLocations")}
+            </h3>
+            <div className="mt-1.5">{renderChips(groups.locations)}</div>
+          </div>
+        )}
+        {groups.events.length > 0 && (
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-ink-faint">
+              {t("journey.relatedEvents")}
+            </h3>
+            <div className="mt-1.5">{renderChips(groups.events)}</div>
+          </div>
+        )}
+      </section>
 
       {/* prev / next */}
-      <footer className="mt-auto flex items-center justify-between gap-3 border-t border-parchment-200 pt-3">
+      <footer className="mt-auto flex items-center justify-between gap-3 border-t border-parchment-200 pt-4">
         <button
           onClick={() => step.order > 1 && onNavigate(step.order - 1)}
           disabled={step.order <= 1}

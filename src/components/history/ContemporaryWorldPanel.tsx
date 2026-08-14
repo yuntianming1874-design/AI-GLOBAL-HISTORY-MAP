@@ -2,23 +2,24 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Civilization, EventDTO } from "@/lib/types";
-import { REGION_ORDER } from "@/lib/theme";
-import { zhRegionNames } from "@/data/seed/zhMisc";
+import {
+  groupCivilizationsByRegion,
+  selectEventsForYear,
+  worldRegionLabel,
+  type WorldRegion,
+} from "@/lib/learning/worldContext";
+import { formatYearSpan } from "@/lib/provenance";
 import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
 
-interface WorldGroup {
-  region: string;
-  civilizations: Civilization[];
-  events: EventDTO[];
-}
-
 /**
- * V0.3 — Contemporary World Panel.
+ * V0.3 Phase 2 — World Context (enhanced).
  *
- * "751 年，中国发生了什么？与此同时，世界其他地方发生了什么？"
- * All data comes from the existing seed-backed APIs — no invented facts.
- * Regions without reliable structured data show an explicit placeholder.
+ * "同一年，世界不同地区发生了什么？" organized by region:
+ *   East Asia · Central Asia · Middle East · Europe · Japan · Southeast Asia · Americas
+ * Each region shows: civilization(s), key event(s), short explanation,
+ * date (provenance formatter) and confidence. Regions without reliable
+ * structured data show an explicit placeholder — nothing is invented.
  */
 export function ContemporaryWorldPanel({ year }: { year: number | null }) {
   const { locale, t } = useLocale();
@@ -52,32 +53,13 @@ export function ContemporaryWorldPanel({ year }: { year: number | null }) {
     };
   }, []);
 
-  const groups = useMemo<WorldGroup[]>(() => {
-    if (!events || !civilizations || year === null) return [];
-    const civByRegion = new Map<string, Civilization[]>();
-    for (const c of civilizations) {
-      const list = civByRegion.get(c.region) ?? [];
-      list.push(c);
-      civByRegion.set(c.region, list);
-    }
-    const out: WorldGroup[] = [];
-    for (const region of REGION_ORDER) {
-      const civs = civByRegion.get(region) ?? [];
-      if (civs.length === 0) continue;
-      const regionEvents = events
-        .filter((e) => {
-          // point event within ±5 years, or range covering the year
-          if (e.civilizationId && !civs.some((c) => c.id === e.civilizationId)) {
-            return false;
-          }
-          if (e.yearEnd !== null) return e.year <= year && year <= e.yearEnd;
-          return Math.abs(e.year - year) <= 5;
-        })
-        .sort((a, b) => a.year - b.year)
-        .slice(0, 4);
-      out.push({ region, civilizations: civs, events: regionEvents });
-    }
-    return out;
+  const groups = useMemo(() => {
+    if (!civilizations || year === null) return [];
+    return groupCivilizationsByRegion(civilizations.map((c) => c.id)).map((g) => {
+      const civs = civilizations.filter((c) => g.civilizationIds.includes(c.id));
+      const rows = events ? selectEventsForYear(events, g.civilizationIds, year) : [];
+      return { ...g, civs, rows };
+    });
   }, [events, civilizations, year]);
 
   if (year === null) {
@@ -102,6 +84,25 @@ export function ContemporaryWorldPanel({ year }: { year: number | null }) {
     );
   }
 
+  const confidenceBadge = (row: { confidence: string }) => {
+    const c = row.confidence;
+    if (c === "disputed") {
+      return (
+        <span className="rounded-full bg-vermilion/10 px-1.5 py-0.5 text-[10px] font-semibold text-vermilion-dark">
+          {t("world.confidence.disputed")}
+        </span>
+      );
+    }
+    if (c === "unverified" || c === "low") {
+      return (
+        <span className="rounded-full bg-parchment-300/40 px-1.5 py-0.5 text-[10px] font-semibold text-ink-faint">
+          {t("world.confidence.unverified")}
+        </span>
+      );
+    }
+    return null; // high/medium — no badge needed
+  };
+
   return (
     <section className="panel p-5" aria-label={t("journey.worldTitle")}>
       <header className="flex items-center gap-2">
@@ -119,13 +120,15 @@ export function ContemporaryWorldPanel({ year }: { year: number | null }) {
         {groups.map((g) => (
           <div
             key={g.region}
-            className="rounded-lg border border-parchment-200 bg-parchment-50/70 p-3"
+            className="rounded-lg border border-parchment-200 bg-parchment-50/70 p-3.5"
           >
             <h3 className="text-xs font-bold uppercase tracking-wide text-vermilion-dark">
-              {zh ? (zhRegionNames[g.region] ?? g.region) : g.region}
+              {worldRegionLabel(g.region as WorldRegion, locale)}
             </h3>
+
+            {/* civilizations */}
             <div className="mt-1.5 flex flex-wrap gap-1">
-              {g.civilizations.map((c) => (
+              {g.civs.map((c) => (
                 <span
                   key={c.id}
                   className="inline-flex items-center gap-1 rounded-full border border-parchment-300 bg-parchment-100 px-2 py-0.5 text-[11px] font-medium text-ink"
@@ -142,15 +145,34 @@ export function ContemporaryWorldPanel({ year }: { year: number | null }) {
                 </span>
               ))}
             </div>
-            {g.events.length > 0 ? (
-              <ul className="mt-2 space-y-1">
-                {g.events.map((e) => (
-                  <li key={e.id} className="text-[12px] leading-snug text-ink-soft">
-                    <span className="font-mono text-[11px] text-ink-faint">
-                      {e.year}
-                      {e.yearEnd !== null && e.yearEnd !== e.year ? `–${e.yearEnd}` : ""}
-                    </span>{" "}
-                    {zh ? e.chineseTitle : e.title}
+
+            {/* key events with explanation + provenance */}
+            {g.rows.length > 0 ? (
+              <ul className="mt-2 space-y-2">
+                {g.rows.map((row) => (
+                  <li key={row.eventId} className="text-[12px] leading-snug text-ink-soft">
+                    <span className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-mono text-[11px] text-ink-faint">
+                        {formatYearSpan(
+                          row.year,
+                          row.yearEnd,
+                          {
+                            year: row.year,
+                            yearMax: row.yearEnd ?? undefined,
+                            precision: row.precision,
+                            confidence: row.confidence,
+                          },
+                          locale,
+                        )}
+                      </span>
+                      <span className="font-semibold text-ink">
+                        {zh ? row.chineseTitle : row.title}
+                      </span>
+                      {confidenceBadge(row)}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] italic text-ink-faint">
+                      {zh ? row.zhExplanation : row.shortExplanation}
+                    </span>
                   </li>
                 ))}
               </ul>

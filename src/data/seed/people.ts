@@ -1,0 +1,315 @@
+import type { Person } from "../../lib/types";
+import { PERSON_PROVENANCE } from "./provenance";
+
+/**
+ * 25 historically notable figures of the 7th–9th century world,
+ * centered on the Tang dynasty and its contemporaries across
+ * the Islamic caliphates, Carolingian Europe, Byzantium and Japan.
+ */
+const peopleRaw: Person[] = [
+  {
+    id: "p-gaozu",
+    name: "Li Yuan",
+    chineseName: "李渊",
+    birthYear: 566,
+    deathYear: 635,
+    role: "Founding Emperor of Tang",
+    importance: 3,
+    civilizationId: "c-tang",
+    summary:
+      "A Sui general who rose against the dynasty in 617 and founded the Tang in 618, reigning as Gaozu before abdicating to his son.",
+  },
+  {
+    id: "p-taizong",
+    name: "Li Shimin (Taizong)",
+    chineseName: "李世民",
+    birthYear: 598,
+    deathYear: 649,
+    role: "Emperor of Tang",
+    importance: 5,
+    civilizationId: "c-tang",
+    summary:
+      "The second Tang emperor, who seized power in the Xuanwu Gate coup of 626 and built a reign celebrated as the model of a golden age.",
+  },
+  {
+    id: "p-wu-zetian",
+    name: "Wu Zetian",
+    chineseName: "武则天",
+    birthYear: 624,
+    deathYear: 705,
+    role: "Empress Regnant",
+    importance: 4,
+    civilizationId: "c-tang",
+    summary:
+      "The only woman in Chinese history to rule as emperor in her own right, replacing the Tang with her Zhou dynasty from 690 to 705.",
+  },
+  {
+    id: "p-xuanzong",
+    name: "Li Longji (Xuanzong)",
+    chineseName: "李隆基",
+    birthYear: 685,
+    deathYear: 762,
+    role: "Emperor of Tang",
+    importance: 4,
+    civilizationId: "c-tang",
+    summary:
+      "Tang emperor whose reign (712–756) opened in brilliance and collapsed in the catastrophe of the An Lushan rebellion.",
+  },
+  {
+    id: "p-yang-guifei",
+    name: "Yang Guifei",
+    chineseName: "杨贵妃",
+    birthYear: 719,
+    deathYear: 756,
+    role: "Imperial Consort",
+    importance: 3,
+    civilizationId: "c-tang",
+    summary:
+      "Xuanzong's beloved consort from 745, blamed for court corruption and killed during the flight from the rebellion in 756.",
+  },
+  {
+    id: "p-an-lushan",
+    name: "An Lushan",
+    chineseName: "安禄山",
+    birthYear: 703,
+    deathYear: 757,
+    role: "General & Rebel",
+    importance: 4,
+    civilizationId: "c-tang",
+    summary:
+      "A frontier general of Sogdian descent who rebelled in 755, triggering the war that broke the Tang golden age.",
+  },
+  {
+    id: "p-guo-ziyi",
+    name: "Guo Ziyi",
+    chineseName: "郭子仪",
+    birthYear: 697,
+    deathYear: 781,
+    role: "General",
+    importance: 4,
+    civilizationId: "c-tang",
+    summary:
+      "The Tang general who turned back the An Lushan rebellion and defended the dynasty into his eighties.",
+  },
+  {
+    id: "p-li-bai",
+    name: "Li Bai",
+    chineseName: "李白",
+    birthYear: 701,
+    deathYear: 762,
+    role: "Poet",
+    importance: 5,
+    civilizationId: "c-tang",
+    summary:
+      "China's most beloved poet, whose free-spirited verse made him the emblem of the Tang golden age.",
+  },
+  {
+    id: "p-du-fu",
+    name: "Du Fu",
+    chineseName: "杜甫",
+    birthYear: 712,
+    deathYear: 770,
+    role: "Poet",
+    importance: 5,
+    civilizationId: "c-tang",
+    summary:
+      "The other great poet of the Tang, whose verse chronicled the rebellion years and earned him the title of poet-sage.",
+  },
+  {
+    id: "p-xuanzang",
+    name: "Xuanzang",
+    chineseName: "玄奘",
+    birthYear: 602,
+    deathYear: 664,
+    role: "Buddhist Monk & Pilgrim",
+    importance: 5,
+    civilizationId: "c-tang",
+    summary:
+      "The monk who traveled overland to India (629–645), returned with the Buddhist scriptures and led their translation into Chinese.",
+  },
+  {
+    id: "p-han-yu",
+    name: "Han Yu",
+    chineseName: "韩愈",
+    birthYear: 768,
+    deathYear: 824,
+    role: "Scholar & Essayist",
+    importance: 3,
+    civilizationId: "c-tang",
+    summary:
+      "A Tang essayist and champion of classical prose who attacked Buddhism in his famous memorial of 819.",
+  },
+  {
+    id: "p-huang-chao",
+    name: "Huang Chao",
+    chineseName: "黄巢",
+    birthYear: 835,
+    deathYear: 884,
+    role: "Rebel Leader",
+    importance: 3,
+    civilizationId: "c-tang",
+    summary:
+      "Leader of the great rebellion (875–884) that sacked Chang'an and fatally weakened the Tang.",
+  },
+  {
+    id: "p-muhammad",
+    name: "Muhammad",
+    chineseName: "穆罕默德",
+    birthYear: 570,
+    deathYear: 632,
+    role: "Prophet of Islam",
+    importance: 5,
+    civilizationId: null,
+    summary:
+      "The prophet of Islam, who received the revelations of the Qur'an and unified Arabia before his death in 632.",
+  },
+  {
+    id: "p-abu-bakr",
+    name: "Abu Bakr",
+    chineseName: "阿布·伯克尔",
+    birthYear: 573,
+    deathYear: 634,
+    role: "First Caliph",
+    importance: 4,
+    civilizationId: null,
+    summary:
+      "The Prophet's closest companion and father-in-law, who became the first caliph (632–634) and consolidated the early Islamic state.",
+  },
+  {
+    id: "p-harun-al-rashid",
+    name: "Harun al-Rashid",
+    chineseName: "哈伦·拉希德",
+    birthYear: 766,
+    deathYear: 809,
+    role: "Abbasid Caliph",
+    importance: 4,
+    civilizationId: "c-abbasid",
+    summary:
+      "The Abbasid caliph (786–809) whose glittering Baghdad court figures in the Thousand and One Nights and patronized scholarship.",
+  },
+  {
+    id: "p-charlemagne",
+    name: "Charlemagne",
+    chineseName: "查理曼",
+    birthYear: 747,
+    deathYear: 814,
+    role: "Emperor of the Franks",
+    importance: 5,
+    civilizationId: "c-carolingian",
+    summary:
+      "King of the Franks crowned emperor in 800, whose conquests and reforms shaped medieval western Europe.",
+  },
+  {
+    id: "p-alcuin",
+    name: "Alcuin of York",
+    chineseName: "阿尔昆",
+    birthYear: 735,
+    deathYear: 804,
+    role: "Scholar",
+    importance: 3,
+    civilizationId: "c-carolingian",
+    summary:
+      "The Northumbrian scholar who led Charlemagne's palace school at Aachen and drove the Carolingian renaissance.",
+  },
+  {
+    id: "p-al-khwarizmi",
+    name: "Al-Khwarizmi",
+    chineseName: "花剌子米",
+    birthYear: 780,
+    deathYear: 850,
+    role: "Mathematician",
+    importance: 4,
+    civilizationId: "c-abbasid",
+    summary:
+      "The mathematician at Baghdad's House of Wisdom whose algebra treatise gave the discipline its name.",
+  },
+  {
+    id: "p-genmei",
+    name: "Empress Genmei",
+    chineseName: "元明天皇",
+    birthYear: 660,
+    deathYear: 721,
+    role: "Empress of Japan",
+    importance: 3,
+    civilizationId: "c-japan",
+    summary:
+      "Japanese empress (707–715) who moved the capital to Nara and commissioned the Kojiki, the oldest surviving Japanese chronicle.",
+  },
+  {
+    id: "p-kukai",
+    name: "Kūkai",
+    chineseName: "空海",
+    birthYear: 774,
+    deathYear: 835,
+    role: "Buddhist Monk",
+    importance: 4,
+    civilizationId: "c-japan",
+    summary:
+      "The Japanese monk who introduced esoteric (Shingon) Buddhism after studying in Tang China and founded Mount Kōya.",
+  },
+  {
+    id: "p-abu-muslim",
+    name: "Abu Muslim",
+    chineseName: "阿布·穆斯林",
+    birthYear: 700,
+    deathYear: 755,
+    role: "Revolutionary General",
+    importance: 3,
+    civilizationId: "c-abbasid",
+    summary:
+      "The general who organized the revolution that toppled the Umayyads and brought the Abbasids to power in 750.",
+  },
+  {
+    id: "p-abd-al-rahman-i",
+    name: "Abd al-Rahman I",
+    chineseName: "阿卜杜勒·拉赫曼一世",
+    birthYear: 731,
+    deathYear: 788,
+    role: "Emir of Córdoba",
+    importance: 4,
+    civilizationId: "c-umayyad",
+    summary:
+      "The Umayyad prince who escaped the Abbasid massacre of 750 and founded the independent emirate of Córdoba in 756.",
+  },
+  {
+    id: "p-cyril",
+    name: "Cyril",
+    chineseName: "西里尔",
+    birthYear: 826,
+    deathYear: 869,
+    role: "Missionary",
+    importance: 3,
+    civilizationId: "c-byzantium",
+    summary:
+      "The Byzantine scholar-missionary who, with his brother Methodius, devised the Slavic alphabet and translated the liturgy.",
+  },
+  {
+    id: "p-methodius",
+    name: "Methodius",
+    chineseName: "美多德",
+    birthYear: 815,
+    deathYear: 885,
+    role: "Missionary",
+    importance: 3,
+    civilizationId: "c-byzantium",
+    summary:
+      "Cyril's elder brother and fellow missionary, who became archbishop of Moravia and defended the Slavonic liturgy.",
+  },
+  {
+    id: "p-oleg",
+    name: "Oleg of Novgorod",
+    chineseName: "奥列格",
+    birthYear: null,
+    deathYear: 912,
+    role: "Prince of Kiev",
+    importance: 3,
+    civilizationId: "c-vikings",
+    summary:
+      "The Varangian prince who made Kiev the capital of the Rus' and struck against Constantinople in 907.",
+  },
+];
+
+export const people: Person[] = peopleRaw.map((p) => ({
+  ...p,
+  provenance: PERSON_PROVENANCE[p.id],
+}));

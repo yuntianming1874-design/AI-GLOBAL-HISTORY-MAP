@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-parchment-100 text-ink antialiased;
+  background-image: radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      rgba(201, 162, 39, 0.08),
+      transparent
+    );
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cfb882 transparent;
+}
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cfb882;
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: #e3c265;
+  color: #2b2118;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-xl border border-parchment-300 bg-parchment-50 shadow-card;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-vermilion px-4 py-2 text-sm font-semibold text-white transition hover:bg-vermilion-dark focus:outline-none focus:ring-2 focus:ring-vermilion-light focus:ring-offset-2 focus:ring-offset-parchment-100;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-parchment-300 bg-parchment-50 px-4 py-2 text-sm font-medium text-ink-soft transition hover:border-gold hover:text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-parchment-100;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-parchment-300 bg-parchment-50 px-2.5 py-0.5 text-xs font-medium text-ink-soft;
+  }
+  .input-field {
+    @apply rounded-lg border border-parchment-300 bg-white px-3 py-1.5 text-sm text-ink placeholder:text-ink-faint focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30;
+  }
+}

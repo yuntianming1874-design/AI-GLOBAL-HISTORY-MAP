@@ -8,6 +8,8 @@ import { Timeline } from "./Timeline";
 import { ComparisonPanel } from "./ComparisonPanel";
 import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
+import { useExplorer } from "./ExplorerProvider";
+import { JourneyExplorer } from "./JourneyExplorer";
 
 /**
  * Home overview view — client component so every label follows the
@@ -21,6 +23,13 @@ export function HomeView({
   mode: "postgres" | "seed";
 }) {
   const { t } = useLocale();
+  const { context } = useExplorer();
+
+  // V0.3: ?journey=<slug>&step=N → Journey Explorer mode (single source:
+  // the URL). Everything below stays untouched otherwise.
+  if (context.journeyId) {
+    return <JourneyExplorer />;
+  }
 
   return (
     <div className="space-y-12">
@@ -147,6 +156,12 @@ export function HomeView({
               icon: "bot" as const,
               title: t("page.chat.title"),
               desc: t("home.explore.chat.desc"),
+            },
+            {
+              href: "/journeys/talas-751",
+              icon: "layers" as const,
+              title: t("journey.listTitle"),
+              desc: t("journey.listSubtitle"),
             },
           ].map((c) => (
             <Link

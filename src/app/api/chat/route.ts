@@ -19,6 +19,8 @@ const contextSchema = z
     eventId: z.string().min(1).nullable().optional(),
     personId: z.string().min(1).nullable().optional(),
     locationId: z.string().min(1).nullable().optional(),
+    journeyId: z.string().min(1).nullable().optional(),
+    journeyStep: z.coerce.number().int().nullable().optional(),
   })
   .optional();
 
@@ -54,6 +56,8 @@ export async function POST(req: NextRequest) {
         eventId: ctx?.eventId ?? null,
         personId: ctx?.personId ?? null,
         locationId: ctx?.locationId ?? null,
+        journeyId: ctx?.journeyId ?? null,
+        journeyStep: ctx?.journeyStep ?? null,
       },
       parsed.data.locale ?? "en",
     );

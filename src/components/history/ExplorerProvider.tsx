@@ -19,6 +19,14 @@ import {
   type HistoryExplorerState,
   type HistoryNavigationAction,
 } from "@/lib/explorer";
+import {
+  getJourneyById,
+  getJourneyBySlug,
+} from "@/lib/learning/journeyRepository";
+import {
+  journeyStepPatch,
+  startJourneyPatch,
+} from "@/lib/learning/journeyEngine";
 
 /**
  * V0.2 global exploration state.
@@ -86,6 +94,8 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
           eventId: null,
           personId: null,
           locationId: null,
+          journeyId: null,
+          journeyStep: null,
         }),
       dispatch: (action) => {
         switch (action.type) {
@@ -131,6 +141,26 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
           case "FOCUS_PERSON_GRAPH":
             router.push(`/people?person=${encodeURIComponent(action.personId)}`);
             break;
+          case "START_JOURNEY": {
+            const journey =
+              getJourneyById(action.journeyId) ?? getJourneyBySlug(action.journeyId);
+            if (!journey) break;
+            const p = startJourneyPatch(journey);
+            if (!p) break;
+            // one URL transition: journey + step + full step context
+            router.push(hrefWithContext("/", searchParams, p));
+            break;
+          }
+          case "SET_JOURNEY_STEP": {
+            const journey =
+              getJourneyById(action.journeyId) ?? getJourneyBySlug(action.journeyId);
+            if (!journey) break;
+            const p = journeyStepPatch(journey, action.step);
+            if (!p) break;
+            // single transition: full step context in one push
+            router.push(hrefWithContext("/", searchParams, p));
+            break;
+          }
         }
       },
     }),

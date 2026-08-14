@@ -128,7 +128,11 @@ export function ActionButtons({ actions }: { actions: HistoryNavigationAction[] 
                       ? t("act.personGraph")
                       : action.type === "SET_YEAR"
                         ? t("act.exploreYear", { year: action.year })
-                        : t("act.focusCiv")}
+                        : action.type === "START_JOURNEY"
+                          ? t("journey.start")
+                          : action.type === "SET_JOURNEY_STEP"
+                            ? t("journey.stepOf", { step: action.step, total: "?" })
+                            : t("act.focusCiv")}
         </button>
       ))}
     </div>

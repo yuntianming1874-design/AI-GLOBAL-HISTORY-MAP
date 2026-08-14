@@ -37,6 +37,10 @@ export interface HistoryContext {
   personId: string | null;
   civilizationId: string | null;
   locationId: string | null;
+  /** V0.3: active Learning Journey (slug id, e.g. "talas-751"). */
+  journeyId: string | null;
+  /** V0.3: 1-based step index within the journey. */
+  journeyStep: number | null;
 }
 
 export const EMPTY_CONTEXT: HistoryContext = {
@@ -47,6 +51,8 @@ export const EMPTY_CONTEXT: HistoryContext = {
   personId: null,
   civilizationId: null,
   locationId: null,
+  journeyId: null,
+  journeyStep: null,
 };
 
 export interface HistoryExplorerState {
@@ -75,7 +81,11 @@ export type HistoryNavigationAction =
       entityType?: "event" | "person";
     }
   | { type: "FOCUS_MAP"; locationId: string; eventId?: string; year?: number }
-  | { type: "FOCUS_PERSON_GRAPH"; personId: string };
+  | { type: "FOCUS_PERSON_GRAPH"; personId: string }
+  /** V0.3: enter a Learning Journey at its first step (URL: ?journey=&step=1). */
+  | { type: "START_JOURNEY"; journeyId: string }
+  /** V0.3: jump to a specific journey step (URL: ?journey=&step=N). */
+  | { type: "SET_JOURNEY_STEP"; journeyId: string; step: number };
 
 /* ── URL parameter codec ───────────────────────────────────────────── */
 
@@ -87,6 +97,8 @@ export const CONTEXT_PARAMS: Record<keyof HistoryContext, string> = {
   eventId: "event",
   personId: "person",
   locationId: "loc",
+  journeyId: "journey",
+  journeyStep: "step",
 };
 
 /** Non-context params that are allowed to survive the whitelist (i18n). */
@@ -104,6 +116,10 @@ export function paramsToContext(
     const n = Number.parseInt(raw ?? "", 10);
     return Number.isFinite(n) ? Math.min(YEAR_MAX, Math.max(YEAR_MIN, n)) : null;
   };
+  const parseStep = (raw: string | null): number | null => {
+    const n = Number.parseInt(raw ?? "", 10);
+    return Number.isFinite(n) && n >= 1 && n <= 99 ? n : null;
+  };
   return {
     year: parseYear(params?.get("year") ?? null),
     startYear: parseYear(params?.get("start") ?? null),
@@ -112,6 +128,8 @@ export function paramsToContext(
     eventId: params?.get("event") || null,
     personId: params?.get("person") || null,
     locationId: params?.get("loc") || null,
+    journeyId: params?.get("journey") || null,
+    journeyStep: parseStep(params?.get("step") ?? null),
   };
 }
 
@@ -141,6 +159,13 @@ export function patchContextParams(
       const year = Number(value);
       if (Number.isFinite(year)) {
         next.set(param, String(Math.min(YEAR_MAX, Math.max(YEAR_MIN, Math.round(year)))));
+      }
+      continue;
+    }
+    if (key === "journeyStep") {
+      const step = Number(value);
+      if (Number.isFinite(step) && step >= 1 && step <= 99) {
+        next.set(param, String(Math.round(step)));
       }
       continue;
     }
@@ -197,5 +222,9 @@ export function actionLabel(
       return locale === "zh" ? "在地图上查看" : "View on map";
     case "FOCUS_PERSON_GRAPH":
       return locale === "zh" ? "查看人物图谱" : "View people graph";
+    case "START_JOURNEY":
+      return locale === "zh" ? "开始旅程" : "Start journey";
+    case "SET_JOURNEY_STEP":
+      return locale === "zh" ? `前往第 ${action.step} 步` : `Go to step ${action.step}`;
   }
 }

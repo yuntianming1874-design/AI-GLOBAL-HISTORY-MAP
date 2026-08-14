@@ -1,0 +1,139 @@
+/**
+ * V0.3 — Journey seed data (Phase 2: one vertical slice).
+ *
+ * `talas-751` — 「751 年：怛罗斯之战与唐帝国的世界」
+ *
+ * 只引用 seed 中已存在并经 provenance 审核的实体 id（events / people /
+ * civilizations / locations）。narrative 中可以提到历史人物姓名（如高仙芝），
+ * 但绝不把它们作为可点击实体——高仙芝尚未通过人工 provenance 审核，
+ * 因此不出现在任何 entityId 字段中。
+ */
+import type { Journey } from "./journeyTypes";
+
+export const JOURNEYS: Journey[] = [
+  {
+    id: "talas-751",
+    slug: "talas-751",
+    title: "751 年：怛罗斯之战与唐帝国的世界",
+    titleEn: "751 CE: The Battle of Talas and the Tang World",
+    subtitle: "一条丝绸之路上的分水岭",
+    subtitleEn: "A watershed moment on the Silk Road",
+    description:
+      "沿着时间、地图、人物与文明的线索，理解 751 年怛罗斯之战如何成为唐朝、阿拔斯王朝与中亚世界交汇的节点，并回顾它在世界史中的位置。",
+    descriptionEn:
+      "Follow time, map, people and civilizations to understand how the Battle of Talas in 751 became a meeting point of Tang China, the Abbasid world and Central Asia — and why it still matters.",
+    startYear: 618,
+    endYear: 751,
+    estimatedMinutes: 10,
+    difficulty: "beginner",
+    steps: [
+      {
+        id: "talas-751-step-1",
+        order: 1,
+        title: "唐帝国进入中亚",
+        titleEn: "The Tang Empire Moves into Central Asia",
+        narrative:
+          "618 年唐朝建立后，历代皇帝沿丝绸之路向西推进：630 年灭东突厥，640 年代设安西都护府，把安西四镇（龟兹、疏勒、于阗、焉耆）纳入版图。到 8 世纪中叶，唐朝的势力已深入中亚腹地，与当地政权及西进的阿拉伯势力正面相遇。唐军将领如高仙芝正是在这样的背景下远赴中亚——但请注意，高仙芝尚未通过人工史料审核，本旅程不把他列为可点击人物。",
+        narrativeEn:
+          "After the Tang was founded in 618, successive emperors pushed west along the Silk Road: the Eastern Turks were subdued in 630, and the Protectorate General of Anxi was established in the 640s with the Four Garrisons (Kucha, Kashgar, Khotan, Karasahr) incorporated. By the mid-8th century Tang power reached deep into Central Asia, bringing it face to face with the westward-moving Arab caliphate. Generals such as Gao Xianzhi campaigned in this frontier — but Gao Xianzhi has not yet passed human provenance review, so this journey does not list him as a clickable person.",
+        year: 618,
+        startYear: 618,
+        endYear: 751,
+        civilizationId: "c-tang",
+        locationId: "loc-changan",
+        surroundingEntities: [
+          { id: "c-tang", type: "civilization" },
+          { id: "e-630-eastern-turks", type: "event" },
+          { id: "e-649-taizong-dies", type: "event" },
+          { id: "loc-changan", type: "location" },
+        ],
+      },
+      {
+        id: "talas-751-step-2",
+        order: 2,
+        title: "怛罗斯之战",
+        titleEn: "The Battle of Talas",
+        narrative:
+          "751 年 7–8 月，唐朝安西节度使高仙芝所率唐军与阿拔斯王朝军队在中亚怛逻斯河（今哈萨克斯坦与吉尔吉斯斯坦交界一带）交战，唐军失利。传说被俘的唐军工匠把造纸术带到撒马尔罕，再传向伊斯兰世界与欧洲。怛罗斯之战标志着唐朝向西扩张的终点，也是中国与伊斯兰世界在中亚长期共存的起点。",
+        narrativeEn:
+          "In July–August 751, Tang forces under the Anxi jiedushi Gao Xianzhi met an Abbasid army at the Talas River (on the modern Kyrgyzstan–Kazakhstan frontier) and were routed. Legend holds that captured Chinese artisans carried paper-making to Samarkand and from there across the Islamic world and into Europe. Talas marked the end of Tang westward expansion — and the beginning of a lasting coexistence between the Chinese and Islamic worlds in Central Asia.",
+        year: 751,
+        startYear: 751,
+        endYear: 751,
+        eventId: "e-751-talas",
+        locationId: "loc-talas",
+        civilizationId: "c-tang",
+        surroundingEntities: [
+          { id: "e-751-talas", type: "event" },
+          { id: "loc-talas", type: "location" },
+          { id: "c-tang", type: "civilization" },
+          { id: "c-abbasid", type: "civilization" },
+        ],
+      },
+      {
+        id: "talas-751-step-3",
+        order: 3,
+        title: "唐帝国、阿拔斯王朝与中亚世界",
+        titleEn: "Tang, the Abbasids and the Central Asian World",
+        narrative:
+          "怛罗斯之战的双方并不只是唐朝与阿拔斯王朝。750 年阿拔斯革命刚刚推翻倭马亚王朝，哈里发政权正在巩固；中亚的粟特城邦、突厥部落与吐蕃势力也在这盘棋局之中。751 年前后，阿拉伯帝国与唐朝都从这场接触中获得了对方的知识——纸张、丝绸、天文与数学在中亚走廊上双向流动。",
+        narrativeEn:
+          "The two sides at Talas were never simply Tang versus Abbasid. The Abbasid Revolution had just toppled the Umayyads in 750, and the new caliphate was still consolidating; Sogdian city-states, Turkic tribes and the Tibetan empire were all pieces on the same board. Around 751 both empires gained from the encounter — paper, silk, astronomy and mathematics flowed both ways along the Central Asian corridor.",
+        year: 751,
+        startYear: 751,
+        endYear: 751,
+        civilizationId: "c-abbasid",
+        locationId: "loc-samarkand",
+        surroundingEntities: [
+          { id: "c-abbasid", type: "civilization" },
+          { id: "c-tang", type: "civilization" },
+          { id: "e-750-abbasid-revolution", type: "event" },
+          { id: "e-751-talas", type: "event" },
+          { id: "p-abu-muslim", type: "person" },
+          { id: "loc-samarkand", type: "location" },
+        ],
+      },
+      {
+        id: "talas-751-step-4",
+        order: 4,
+        title: "中国与世界：同一时间发生了什么？",
+        titleEn: "China and the World: What Else Happened in 751?",
+        narrative:
+          "751 年并非只属于怛罗斯。长安城中，唐玄宗治下的盛唐正处在开元天宝盛世的高峰；巴格达，阿拔斯王朝刚迁都立基；西欧，矮子丕平即将开启加洛林时代；日本奈良、玛雅古典期的城邦也在各自的轨道上运行。把 751 年放进世界坐标，才能理解怛罗斯之战为何只是更大图景中的一环。",
+        narrativeEn:
+          "751 did not belong to Talas alone. In Chang'an the Tang was at the peak of the Kaiyuan–Tianbao golden age; in Baghdad the Abbasids were founding a new capital; in Western Europe Pepin the Short was about to open the Carolingian era; Nara Japan and the Classic Maya city-states ran on their own clocks. Placing 751 on a world map shows why Talas was only one thread in a much larger fabric.",
+        year: 751,
+        startYear: 751,
+        endYear: 751,
+        surroundingEntities: [
+          { id: "c-tang", type: "civilization" },
+          { id: "c-abbasid", type: "civilization" },
+          { id: "c-carolingian", type: "civilization" },
+          { id: "c-japan", type: "civilization" },
+          { id: "c-maya", type: "civilization" },
+          { id: "e-751-talas", type: "event" },
+        ],
+      },
+      {
+        id: "talas-751-step-5",
+        order: 5,
+        title: "回顾：为什么怛罗斯之战值得记住？",
+        titleEn: "Review: Why Does the Battle of Talas Matter?",
+        narrative:
+          "怛罗斯之战本身未必改变世界格局，但它浓缩了一个时代的相遇：唐朝的向西扩张在这里停下，伊斯兰世界的东进在这里缓和，丝绸之路上的知识交换却从未中断。理解 751 年，就是理解欧亚大陆如何第一次被真正连接起来——以及这种连接如何塑造了之后一千年的历史。",
+        narrativeEn:
+          "The battle itself may not have redrawn the world, but it condenses an era's encounter: Tang expansion halted here, the Islamic advance softened here, and the exchange of knowledge along the Silk Road never stopped. Understanding 751 is understanding how Eurasia was first truly connected — and how that connection shaped the next millennium.",
+        year: 751,
+        startYear: 751,
+        endYear: 751,
+        eventId: "e-751-talas",
+        surroundingEntities: [
+          { id: "e-751-talas", type: "event" },
+          { id: "c-tang", type: "civilization" },
+          { id: "c-abbasid", type: "civilization" },
+          { id: "loc-talas", type: "location" },
+        ],
+      },
+    ],
+  },
+];

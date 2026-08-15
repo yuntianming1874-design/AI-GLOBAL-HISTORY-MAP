@@ -265,6 +265,9 @@ export function Timeline({ className = "" }: { className?: string }) {
   useEffect(() => {
     const g = brushHost;
     if (!g) return;
+    // width not measured yet → extent would be inverted and d3 would emit
+    // negative-width rects (console errors); wait for a real width
+    if (width < 100) return;
     const brush = d3.brushX().extent([
       [LABEL_W + 14, 0],
       [width - 10, CONTEXT_H],

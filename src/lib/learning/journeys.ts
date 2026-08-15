@@ -1,7 +1,10 @@
 /**
  * V0.3 — Journey seed data (Phase 2: one vertical slice).
  *
- * `talas-751` — 「751 年：怛罗斯之战与唐帝国的世界」
+ * `talas-751` — 「公元 751 年：唐朝与世界的交汇」
+ *
+ * 怛罗斯之战是本旅程的核心事件之一（step 2），但不是唯一焦点：
+ * 标题强调 751 年唐朝与阿拔斯王朝、中亚世界在同一时刻的相遇与连接。
  *
  * 只引用 seed 中已存在并经 provenance 审核的实体 id（events / people /
  * civilizations / locations）。narrative 中可以提到历史人物姓名（如高仙芝），
@@ -14,14 +17,14 @@ export const JOURNEYS: Journey[] = [
   {
     id: "talas-751",
     slug: "talas-751",
-    title: "751 年：怛罗斯之战与唐帝国的世界",
-    titleEn: "751 CE: The Battle of Talas and the Tang World",
-    subtitle: "一条丝绸之路上的分水岭",
-    subtitleEn: "A watershed moment on the Silk Road",
+    title: "公元 751 年：唐朝与世界的交汇",
+    titleEn: "751 CE: Tang China and the Meeting of Worlds",
+    subtitle: "怛罗斯之战与丝绸之路上的相遇之年",
+    subtitleEn: "The Battle of Talas and a year of Silk Road encounters",
     description:
-      "沿着时间、地图、人物与文明的线索，理解 751 年怛罗斯之战如何成为唐朝、阿拔斯王朝与中亚世界交汇的节点，并回顾它在世界史中的位置。",
+      "沿着时间、地图、人物与文明的线索，走进公元 751 年的世界：唐朝的向西扩张、阿拔斯王朝的崛起、怛罗斯之战与丝绸之路上的知识交汇——理解这个时代如何把欧亚大陆第一次真正连接在一起。",
     descriptionEn:
-      "Follow time, map, people and civilizations to understand how the Battle of Talas in 751 became a meeting point of Tang China, the Abbasid world and Central Asia — and why it still matters.",
+      "Follow time, map, people and civilizations into the world of 751 CE: Tang westward expansion, the rise of the Abbasids, the Battle of Talas and the exchange of knowledge along the Silk Road — how this era first truly connected Eurasia.", 
     startYear: 618,
     endYear: 751,
     estimatedMinutes: 10,

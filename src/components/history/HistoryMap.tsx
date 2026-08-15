@@ -271,12 +271,14 @@ export function HistoryMap({ className = "" }: { className?: string }) {
   // manual marker clicks keep opening the modal as before.
   useEffect(() => {
     const id = context.eventId;
-    if (id === prevMapEventRef.current) return;
-    prevMapEventRef.current = id;
-    if (!id || !events) {
+    if (!id) {
       setSelectedEvent(null);
+      prevMapEventRef.current = null;
       return;
     }
+    if (!events) return; // wait for data — do NOT consume the guard yet
+    if (id === prevMapEventRef.current) return;
+    prevMapEventRef.current = id;
     const event = events.find((e) => e.id === id);
     if (context.journeyId) {
       // journey mode: highlight only — no auto popup
@@ -293,12 +295,14 @@ export function HistoryMap({ className = "" }: { className?: string }) {
   // (same journey-mode rule: fly + highlight, no auto popup)
   useEffect(() => {
     const id = context.locationId;
-    if (id === prevLocRef.current) return;
-    prevLocRef.current = id;
-    if (!id || !locations) {
-      if (!id) setLocationModalId(null);
+    if (!id) {
+      setLocationModalId(null);
+      prevLocRef.current = null;
       return;
     }
+    if (!locations) return; // wait for data — do NOT consume the guard yet
+    if (id === prevLocRef.current) return;
+    prevLocRef.current = id;
     const loc = locations.find((l) => l.id === id);
     if (loc) {
       flashFocus(loc.latitude, loc.longitude);

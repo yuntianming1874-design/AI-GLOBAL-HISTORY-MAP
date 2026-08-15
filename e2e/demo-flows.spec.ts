@@ -53,9 +53,9 @@ test.describe("V0.2 demo flows", () => {
     ).toBeVisible();
     await expect(page.getByText("怛罗斯之战")).toBeVisible();
 
-    // Event → People: year-active highlight badge
+    // Event → People: year-active nodes are highlighted (d3 data-highlight)
     await page.goto("/people?event=e-751-talas");
-    await expect(page.getByText("Active in e-751-talas")).toBeVisible();
+    await expect(page.locator('g[data-highlight="1"]').first()).toBeAttached({ timeout: 15_000 });
 
     // AI knows the context (event + year + location)
     await page.goto("/chat?event=e-751-talas&year=751");
@@ -107,9 +107,9 @@ test.describe("V0.2 demo flows", () => {
     await expect(page.getByText("World snapshot around 751:")).toBeVisible({
       timeout: 15_000,
     });
-    await expect(page.getByText("Tang China")).toBeVisible();
-    await expect(page.getByText("Carolingian world")).toBeVisible();
-    await expect(page.getByText("Byzantine Empire")).toBeVisible();
+    await expect(page.getByText("Tang China").first()).toBeVisible();
+    await expect(page.getByText("Carolingian world").first()).toBeVisible();
+    await expect(page.getByText("Byzantine Empire").first()).toBeVisible();
 
     // AI → Timeline
     await page.getByRole("button", { name: "View timeline" }).click();
@@ -124,7 +124,7 @@ test.describe("V0.2 demo flows", () => {
       .getByPlaceholder(/Ask about the Tang era/)
       .fill("What led to the An Lushan Rebellion?");
     await page.getByRole("button", { name: "Send" }).click();
-    await expect(page.getByText(/What led to \*\*An Lushan Rebellion\*\*/)).toBeVisible({
+    await expect(page.getByText(/What led to An Lushan Rebellion/)).toBeVisible({
       timeout: 15_000,
     });
     await expect(page.getByText(/Yang Guifei/)).toBeVisible();
@@ -136,7 +136,7 @@ test.describe("i18n (language setting)", () => {
     const finish = await trackErrors(page);
     await page.goto("/?lang=zh");
     await expect(page.getByRole("link", { name: /总览/ })).toBeVisible();
-    await expect(page.getByText("全球时间轴")).toBeVisible();
+    await expect(page.getByText("全球时间轴").first()).toBeVisible();
 
     // language toggle switches to English and persists in the URL
     await page.getByRole("button", { name: "EN" }).click();
@@ -148,7 +148,7 @@ test.describe("i18n (language setting)", () => {
   test("zh map shows Current Year in Chinese", async ({ page }) => {
     await page.goto("/map?lang=zh&year=751");
     await expect(page.getByText("当前年份")).toBeVisible();
-    await expect(page.getByText("751 CE")).toBeVisible();
+    await expect(page.getByText("751 CE").first()).toBeVisible();
   });
 });
 

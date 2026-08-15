@@ -211,7 +211,11 @@ export function createD3Map(
           const pts = r.points
             .map(([lon, lat]) => projection([lon, lat]))
             .filter((p): p is [number, number] => p !== null);
-          return pts.map((p) => p.join(",")).join(" ");
+          // valid SVG path: "M x,y L x,y …" (bare coordinate pairs were
+          // invalid — surfaced by the browser as console errors)
+          return pts.length > 0
+            ? `M ${pts.map((p) => p.join(",")).join(" L ")}`
+            : "";
         })
         .attr("fill", "none")
         .attr("stroke", (r) => r.color)
@@ -229,7 +233,9 @@ export function createD3Map(
           const pts = r.points
             .map(([lon, lat]) => projection([lon, lat]))
             .filter((p): p is [number, number] => p !== null);
-          return pts.map((p) => p.join(",")).join(" ");
+          return pts.length > 0
+            ? `M ${pts.map((p) => p.join(",")).join(" L ")}`
+            : "";
         })
         .attr("fill", "none")
         .attr("stroke", "transparent")

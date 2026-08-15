@@ -336,6 +336,10 @@ const DICT = {
   "journey.listTitle": { en: "Learning Journeys", zh: "学习旅程" },
   "journey.listSubtitle": { en: "Guided explorations connecting time, map, events, people and AI.", zh: "串联时间、地图、事件、人物与 AI 的引导式探索。" },
 
+  "home.featured.title": { en: "Featured Journeys", zh: "精选旅程" },
+  "home.featured.subtitle": { en: "Guided explorations — start here and follow the story.", zh: "引导式探索——从这里开始，沿着故事走。" },
+  "home.featured.viewAll": { en: "View all journeys", zh: "查看全部旅程" },
+
   /* chat */
   "chat.greeting": {
     en: "Welcome! I'm your AI history guide for the Tang Dynasty era (618–907) and its world contemporaries. Ask me about events, people, civilizations — or how China compared with the wider world. I can see what you're currently viewing and jump to the timeline, map or people graph.",

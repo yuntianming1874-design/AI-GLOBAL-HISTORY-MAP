@@ -29,6 +29,8 @@ export const JOURNEYS: Journey[] = [
     endYear: 751,
     estimatedMinutes: 10,
     difficulty: "beginner",
+    status: "published",
+    featured: true,
     keywords: [
       { labelZh: "丝绸之路", labelEn: "Silk Road" },
       { labelZh: "中亚", labelEn: "Central Asia" },

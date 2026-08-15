@@ -10,6 +10,8 @@ import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
 import { useExplorer } from "./ExplorerProvider";
 import { JourneyExplorer } from "./JourneyExplorer";
+import { JourneysGrid } from "./JourneysGrid";
+import type { Journey } from "@/lib/learning/journeyTypes";
 
 /**
  * Home overview view — client component so every label follows the
@@ -18,9 +20,12 @@ import { JourneyExplorer } from "./JourneyExplorer";
 export function HomeView({
   overview,
   mode,
+  featuredJourneys,
 }: {
   overview: OverviewDTO;
   mode: "postgres" | "seed";
+  /** V0.3 Phase 3C — from journeyRepository (never hard-coded). */
+  featuredJourneys?: Journey[];
 }) {
   const { t } = useLocale();
   const { context } = useExplorer();
@@ -92,6 +97,24 @@ export function HomeView({
         </div>
       </section>
 
+      {/* featured journeys — 10-second "where do I start?" */}
+      {featuredJourneys && featuredJourneys.length > 0 && (
+        <Section
+          id="journeys"
+          icon="layers"
+          title={t("home.featured.title")}
+          subtitle={t("home.featured.subtitle")}
+        >
+          <JourneysGrid journeys={featuredJourneys} />
+          <div className="mt-4 text-center">
+            <Link href="/journeys" className="btn-ghost !px-4 !py-1.5 text-xs">
+              {t("home.featured.viewAll")}
+              <Icon name="arrow-right" className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </Section>
+      )}
+
       {/* global timeline */}
       <Section
         id="timeline"
@@ -156,12 +179,6 @@ export function HomeView({
               icon: "bot" as const,
               title: t("page.chat.title"),
               desc: t("home.explore.chat.desc"),
-            },
-            {
-              href: "/journeys/talas-751",
-              icon: "layers" as const,
-              title: t("journey.listTitle"),
-              desc: t("journey.listSubtitle"),
             },
           ].map((c) => (
             <Link

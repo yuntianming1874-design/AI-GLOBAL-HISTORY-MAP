@@ -112,3 +112,33 @@ export function getJourneyStep(
 export function journeyStepCount(journey: Journey): number {
   return journey.steps.length;
 }
+
+/* ── featured / homepage ordering (V0.3 Phase 3C) ────────────────────
+ * Order: published → featured → difficulty → estimatedMinutes.
+ * draft journeys never surface on the homepage. */
+
+const DIFFICULTY_RANK = { beginner: 0, intermediate: 1, advanced: 2 } as const;
+
+export function journeyOrderKey(j: Journey): [number, number, number, number] {
+  return [
+    (j.status ?? "published") === "published" ? 0 : 1,
+    j.featured ? 0 : 1,
+    DIFFICULTY_RANK[j.difficulty],
+    j.estimatedMinutes,
+  ];
+}
+
+/** Published journeys ordered for the homepage (featured first). */
+export function getFeaturedJourneys(limit = 3): Journey[] {
+  return JOURNEYS
+    .filter((j) => (j.status ?? "published") === "published")
+    .sort((a, b) => {
+      const ka = journeyOrderKey(a);
+      const kb = journeyOrderKey(b);
+      for (let i = 0; i < ka.length; i++) {
+        if (ka[i] !== kb[i]) return ka[i] - kb[i];
+      }
+      return 0;
+    })
+    .slice(0, limit);
+}

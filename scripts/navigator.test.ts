@@ -76,14 +76,20 @@ check("empty context non-empty", empty.length > 0, true);
 check("empty context all continue", empty.every((r) => r.type === "continue"), true);
 check("empty context journeys exist", empty.every((r) => r.journeyId !== undefined && getJourneyById(r.journeyId!) !== null), true);
 
-// event context (Talas: no participants in seed) → cause/compare/continue
+// event context (Talas): RC-3 — pseudo-causes removed, compare/continue stay
 const ev = buildRecommendations(ctx({ year: 751, eventId: "e-751-talas" }), "zh", 3);
 const evTypes = ev.map((r) => r.type);
-check("event context has cause", evTypes.includes("cause"), true);
+check("RC-3: Talas has NO curated cause (e-745 removed)", evTypes.includes("cause"), false);
 check("event context has compare", evTypes.includes("compare"), true);
 check("event context has continue journey", evTypes.includes("continue"), true);
-const causeRec = ev.find((r) => r.type === "cause");
-check("cause is earlier same-civ event", causeRec !== undefined && (eventYear(causeRec) ?? Infinity) < 751, true);
+check("RC-3: Talas never recommends itself as deepen", ev.some((r) => r.type === "deepen" && r.entityRefs.some((x) => x.id === "e-751-talas")), false);
+
+// event context (Tang fall): curated cause exists and is historically sound
+const evFall = buildRecommendations(ctx({ year: 907, eventId: "e-907-fall-of-tang" }), "zh", 3);
+const causeRec = evFall.find((r) => r.type === "cause");
+check("curated cause present (907 → 875)", causeRec !== undefined, true);
+check("curated cause targets Huang Chao revolt", causeRec?.entityRefs[0]?.id, "e-875-huang-chao");
+check("curated cause is earlier", (eventYear(causeRec!) ?? Infinity) < 907, true);
 const compareRec = ev.find((r) => r.type === "compare");
 const compareEvRef = compareRec?.entityRefs.find((x) => x.type === "event");
 check("compare ref is an event", compareEvRef !== undefined, true);

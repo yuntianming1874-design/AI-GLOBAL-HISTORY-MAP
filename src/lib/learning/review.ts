@@ -95,6 +95,34 @@ export const RECALL_QUESTIONS: RecallQuestion[] = [
     feedbackHintEn:
       "Think about where Tang westward expansion halted, the exchange of knowledge along the Silk Road, and the long coexistence of the Chinese and Islamic worlds in Central Asia.",
   },
+  {
+    id: "talas-751-q4",
+    journeyId: "talas-751",
+    question: "怛罗斯之战发生在哪条河畔？",
+    questionEn: "At which river did the Battle of Talas take place?",
+    type: "fact",
+    keywordGroups: [
+      ["怛逻斯河", "怛罗斯河", "塔拉斯河", "Talas River"],
+    ],
+    sourceStepIds: ["talas-751-step-2"],
+    feedbackHint: "回忆一下：战役发生在怛逻斯河（今哈萨克斯坦与吉尔吉斯斯坦交界一带）畔。",
+    feedbackHintEn:
+      "Recall: the battle took place at the Talas River (on the modern Kyrgyzstan–Kazakhstan frontier).",
+  },
+  {
+    id: "talas-751-q5",
+    journeyId: "talas-751",
+    question: "传说中，哪项技术随被俘工匠经丝绸之路传向西方？",
+    questionEn: "According to legend, which craft spread westward along the Silk Road with captured artisans?",
+    type: "relationship",
+    keywordGroups: [
+      ["造纸术", "纸", "paper"],
+    ],
+    sourceStepIds: ["talas-751-step-2", "talas-751-step-5"],
+    feedbackHint: "想一想怛罗斯之战著名的文化后果——被俘的工匠把造纸术带到撒马尔罕，再传向伊斯兰世界与欧洲。",
+    feedbackHintEn:
+      "Think of Talas' famous cultural consequence — captured artisans carried paper-making to Samarkand, and from there across the Islamic world and into Europe.",
+  },
 ];
 
 /* ── validation (fail-fast: questions must stay inside the journey) ── */

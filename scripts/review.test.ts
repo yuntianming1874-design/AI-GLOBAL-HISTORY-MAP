@@ -32,7 +32,7 @@ const questions = getRecallQuestions("talas-751");
 
 /* ── 数据完整性：问题来自 Journey ─────────────────────────────────── */
 
-check("3 questions for talas-751", questions.length, 3);
+check("5 questions for talas-751", questions.length, 5);
 for (const q of questions) {
   check(`${q.id} journeyId`, q.journeyId, "talas-751");
   check(`${q.id} question non-empty`, q.question.length > 0, true);
@@ -79,6 +79,25 @@ check("Q2 partial (只提唐朝)", evaluateRecallAnswer(q2, "唐朝", "zh").grad
 check("Q2 partial (只提阿拔斯)", evaluateRecallAnswer(q2, "阿拔斯", "zh").grade, "partial");
 check("Q2 needs_review (无关)", evaluateRecallAnswer(q2, "日本奈良", "zh").grade, "needs_review");
 check("Q2 feedback mentions missing concept", evaluateRecallAnswer(q2, "唐朝", "zh").missedLabels.length, 1);
+
+/* ── Q4 (fact): 怛逻斯河 ──────────────────────────────────────────── */
+
+const q4 = questions[3]!;
+check("Q4 type fact", q4.type, "fact");
+check("Q4 zh correct (怛逻斯河)", evaluateRecallAnswer(q4, "怛逻斯河", "zh").grade, "correct");
+check("Q4 zh correct (塔拉斯河)", evaluateRecallAnswer(q4, "塔拉斯河", "zh").grade, "correct");
+check("Q4 en correct (Talas River)", evaluateRecallAnswer(q4, "the Talas River", "en").grade, "correct");
+check("Q4 needs_review (黄河)", evaluateRecallAnswer(q4, "黄河", "zh").grade, "needs_review");
+
+/* ── Q5 (relationship): 造纸术西传 ────────────────────────────────── */
+
+const q5 = questions[4]!;
+check("Q5 type relationship", q5.type, "relationship");
+check("Q5 zh correct (造纸术)", evaluateRecallAnswer(q5, "造纸术", "zh").grade, "correct");
+check("Q5 zh correct (纸)", evaluateRecallAnswer(q5, "纸的技术", "zh").grade, "correct");
+check("Q5 en correct (paper-making)", evaluateRecallAnswer(q5, "paper-making", "en").grade, "correct");
+check("Q5 partial (丝绸)", evaluateRecallAnswer(q5, "丝绸", "zh").grade, "needs_review");
+check("Q5 feedback constructive", evaluateRecallAnswer(q5, "丝绸", "zh").feedback.includes("错误") === false, true);
 
 /* ── Q3 (causal): 中亚 / 扩张 / 丝绸之路 ─────────────────────────── */
 

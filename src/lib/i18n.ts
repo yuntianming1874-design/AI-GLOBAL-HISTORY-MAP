@@ -283,6 +283,8 @@ const DICT = {
   "journey.lifespanOpen": { en: "Open person", zh: "打开人物" },
   "journey.lifespanNoPerson": { en: "No person data for this year.", zh: "该年份暂无可用的人物数据。" },
   "world.confidence.disputed": { en: "disputed", zh: "存在争议" },
+  "journey.reviewNow": { en: "Start Review", zh: "开始复习" },
+  "journey.enter": { en: "Enter journey", zh: "进入旅程" },
   "review.pageTitle": { en: "Journey Review", zh: "旅程回顾" },
   "review.pageSubtitle": { en: "Retrieval practice — not an exam.", zh: "回忆练习——不是考试。" },
   "review.badge": { en: "Recall", zh: "回忆练习" },

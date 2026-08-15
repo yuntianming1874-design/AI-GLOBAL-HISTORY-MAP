@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getJourneyBySlug } from "@/lib/learning/journeyRepository";
 import { PageHeader } from "@/components/history/PageHeader";
 import { JourneyStartButton } from "./JourneyStartButton";
+import { JourneyReviewButton } from "./JourneyReviewButton";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,10 @@ export default function JourneyDetailPage({ params }: Props) {
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">{journey.description}</p>
           </div>
-          <JourneyStartButton journeyId={journey.id} />
+          <div className="flex flex-col items-stretch gap-2">
+            <JourneyStartButton journeyId={journey.id} />
+            <JourneyReviewButton slug={journey.slug} />
+          </div>
         </div>
       </section>
 

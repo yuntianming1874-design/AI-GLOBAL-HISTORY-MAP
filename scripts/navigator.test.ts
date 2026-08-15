@@ -152,6 +152,12 @@ check("no process.env in navigator", src.includes("process.env") === false, true
 check("limit=1", buildRecommendations(ctx({}), "zh", 1).length <= 1, true);
 check("limit=5", buildRecommendations(ctx({ year: 751, eventId: "e-751-talas" }), "zh", 5).length <= 5, true);
 
+// dedupe: same journey must not appear twice even with a larger limit
+const wide = buildRecommendations(ctx({ year: 751, eventId: "e-751-talas" }), "zh", 6);
+const ids = wide.map((r) => r.id);
+check("no duplicate recommendation ids (limit=6)", new Set(ids).size, ids.length);
+check("talas-751 continue appears once", ids.filter((i) => i === "continue:talas-751").length, 1);
+
 console.log(`\n✓ ${passed} passed · ✗ ${failed} failed`);
 if (failures.length > 0) {
   console.log("\nFailures:");

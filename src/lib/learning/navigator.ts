@@ -153,8 +153,14 @@ export function buildRecommendations(
 ): NavigatorRecommendation[] {
   const zh = locale === "zh";
   const out: NavigatorRecommendation[] = [];
+  const seen = new Set<string>();
   const push = (r: NavigatorRecommendation | null) => {
-    if (r && out.length < limit) out.push(r);
+    if (!r) return;
+    // dedupe by stable id (e.g. the same featured journey can be picked
+    // by both the event branch and the year branch — keep one)
+    if (seen.has(r.id)) return;
+    seen.add(r.id);
+    if (out.length < limit) out.push(r);
   };
 
   /* 1. Journey context: continue to next step */

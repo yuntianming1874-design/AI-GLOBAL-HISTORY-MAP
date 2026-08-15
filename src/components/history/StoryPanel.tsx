@@ -242,8 +242,7 @@ export function StoryPanel({
         </button>
         <button
           onClick={() => onNavigate(step.order + 1)}
-          disabled={step.order >= journey.steps.length}
-          className="btn-primary !px-4 !py-1.5 text-xs disabled:cursor-not-allowed disabled:opacity-40"
+          className="btn-primary !px-4 !py-1.5 text-xs"
         >
           {step.order >= journey.steps.length
             ? t("journey.complete")

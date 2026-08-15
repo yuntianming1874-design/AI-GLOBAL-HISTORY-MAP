@@ -183,11 +183,20 @@ export function hasUnknownParams(params: URLSearchParams | null): boolean {
   return [...params.keys()].some((key) => !allowed.has(key));
 }
 
-/** Keep only whitelisted, valid context params (sanitized copy). */
+/** Keep only whitelisted, valid context params (sanitized copy).
+ *  EXTRA_ALLOWED_PARAMS (lang, review) survive sanitization too —
+ *  otherwise a URL-triggered clean would drop the review position. */
 export function sanitizeContextParams(
   params: URLSearchParams | null,
 ): URLSearchParams {
-  return patchContextParams(new URLSearchParams(), paramsToContext(params));
+  const next = patchContextParams(new URLSearchParams(), paramsToContext(params));
+  if (params) {
+    for (const key of EXTRA_ALLOWED_PARAMS) {
+      const v = params.get(key);
+      if (v) next.set(key, v);
+    }
+  }
+  return next;
 }
 
 export function hrefWithContext(

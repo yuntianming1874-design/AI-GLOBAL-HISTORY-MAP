@@ -29,6 +29,12 @@ export const JOURNEYS: Journey[] = [
     endYear: 751,
     estimatedMinutes: 10,
     difficulty: "beginner",
+    keywords: [
+      { labelZh: "丝绸之路", labelEn: "Silk Road" },
+      { labelZh: "中亚", labelEn: "Central Asia" },
+      { labelZh: "知识交换", labelEn: "Knowledge exchange" },
+      { labelZh: "唐朝与阿拔斯", labelEn: "Tang & Abbasids" },
+    ],
     steps: [
       {
         id: "talas-751-step-1",

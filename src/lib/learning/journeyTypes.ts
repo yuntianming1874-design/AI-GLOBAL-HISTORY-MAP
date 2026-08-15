@@ -63,6 +63,9 @@ export interface Journey {
   endYear: number;
   estimatedMinutes: number;
   difficulty: "beginner" | "intermediate" | "advanced";
+  /** V0.3 Phase 3B: core-memory theme words (bilingual, journey data —
+   *  used by the Complete page; never AI-generated). */
+  keywords?: { labelZh: string; labelEn: string }[];
   steps: JourneyStep[];
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { useExplorer } from "./ExplorerProvider";
 import { useLocale } from "./LocaleProvider";
 import { getJourneyBySlug, getJourneyStep } from "@/lib/learning/journeyRepository";
@@ -22,6 +23,7 @@ import { Icon } from "@/components/ui/icons";
  */
 export function JourneyExplorer({ className = "" }: { className?: string }) {
   const { context, dispatch } = useExplorer();
+  const router = useRouter();
   const { t } = useLocale();
 
   const journey = useMemo(
@@ -49,7 +51,12 @@ export function JourneyExplorer({ className = "" }: { className?: string }) {
   }
 
   const goTo = (target: number) => {
-    if (target < 1 || target > journey.steps.length) return;
+    if (target < 1) return;
+    // last step → Journey Complete page (Phase 3B)
+    if (target > journey.steps.length) {
+      router.push(`/journeys/${journey.slug}/complete`);
+      return;
+    }
     // single URL transition — full step context in one dispatch
     dispatch({ type: "SET_JOURNEY_STEP", journeyId: journey.id, step: target });
   };

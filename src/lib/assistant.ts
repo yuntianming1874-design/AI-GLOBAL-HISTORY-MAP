@@ -1,8 +1,9 @@
 import type { ChatMessage, ChatResponse } from "./types";
-import type {
-  HistoryContext,
-  HistoryEntityLink,
-  HistoryNavigationAction,
+import {
+  EMPTY_CONTEXT,
+  type HistoryContext,
+  type HistoryEntityLink,
+  type HistoryNavigationAction,
 } from "./explorer";
 import {
   t as translate,
@@ -34,6 +35,7 @@ import {
   formatYearSpan,
   type HistoricalDateValue,
 } from "./provenance";
+import { buildRecommendations } from "./learning/navigator";
 import { searchHistoryEntities } from "./search";
 
 /**
@@ -58,7 +60,7 @@ export interface Assistant {
     messages: ChatMessage[],
     context?: HistoryContext,
     locale?: Locale,
-  ): Promise<Omit<ChatResponse, "source">>;
+  ): Promise<Omit<ChatResponse, "source" | "recommendations">>;
 }
 
 /* ── Local knowledge engine ────────────────────────────────────────── */
@@ -640,7 +642,7 @@ class LocalAssistant implements Assistant {
     messages: ChatMessage[],
     context?: HistoryContext,
     locale: Locale = "en",
-  ): Promise<Omit<ChatResponse, "source">> {
+  ): Promise<Omit<ChatResponse, "source" | "recommendations">> {
     const last = messages.filter((m) => m.role === "user").at(-1)?.content ?? "";
     const q = last.trim();
     const qLower = q.toLowerCase();
@@ -1037,7 +1039,7 @@ const ENTITY_CATALOG = [
 const LINK_TYPES = new Set(["event", "person", "civilization", "location", "territory"]);
 
 /** Validate + sanitize the model's JSON answer (defensive against bad ids). */
-function parseEngineJson(raw: string): Omit<ChatResponse, "source"> | null {
+function parseEngineJson(raw: string): Omit<ChatResponse, "source" | "recommendations"> | null {
   let data: unknown;
   try {
     data = JSON.parse(raw);
@@ -1111,7 +1113,7 @@ class OpenAIAssistant implements Assistant {
     messages: ChatMessage[],
     context?: HistoryContext,
     locale: Locale = "en",
-  ): Promise<Omit<ChatResponse, "source">> {
+  ): Promise<Omit<ChatResponse, "source" | "recommendations">> {
     const digest = [
       "Civilizations covered:",
       ...civilizations.map((c) => `- ${c.name} (${c.chineseName}), ${c.region}, ${c.startYear}-${c.endYear}`),
@@ -1197,19 +1199,24 @@ export async function chat(
   locale: Locale = "en",
 ): Promise<ChatResponse> {
   const assistant = getAssistant();
+  // V0.3 Phase 3D: recommendations ALWAYS come from the deterministic
+  // navigator (lib/learning/navigator.ts) — never from the LLM. Both
+  // engines share this single exit path, so Answer and Recommendation
+  // stay strictly separated regardless of who answered.
+  const recommendations = buildRecommendations(context ?? EMPTY_CONTEXT, locale, 3);
   const isOpenAI = Boolean(process.env.OPENAI_API_KEY);
   if (isOpenAI) {
     try {
       const { reply } = await assistant.reply(messages, context, locale);
-      return { reply, source: "openai", citations: [], links: [], actions: [] };
+      return { reply, source: "openai", citations: [], links: [], actions: [], recommendations };
     } catch {
       local ??= new LocalAssistant();
       const result = await local.reply(messages, context, locale);
-      return { ...result, source: "local" };
+      return { ...result, source: "local", recommendations };
     }
   }
   const result = await assistant.reply(messages, context, locale);
-  return { ...result, source: "local" };
+  return { ...result, source: "local", recommendations };
 }
 
 export { SUGGESTED };

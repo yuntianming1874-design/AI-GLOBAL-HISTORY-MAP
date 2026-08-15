@@ -3,6 +3,7 @@ import type {
   HistoryEntityLink,
   HistoryNavigationAction,
 } from "./explorer";
+import type { NavigatorRecommendation } from "./learning/navigatorTypes";
 import type {
   HistoricalDateValue,
   HistoricalNameType,
@@ -244,4 +245,10 @@ export interface ChatResponse {
   links: HistoryEntityLink[];
   /** V0.2: suggested navigation actions (Timeline / Map / People / Events). */
   actions: HistoryNavigationAction[];
+  /**
+   * V0.3 Phase 3D: next-step recommendations from the DETERMINISTIC
+   * navigator (lib/learning/navigator.ts) — never from the LLM.
+   * Always [] for old clients (they simply ignore it).
+   */
+  recommendations: NavigatorRecommendation[];
 }

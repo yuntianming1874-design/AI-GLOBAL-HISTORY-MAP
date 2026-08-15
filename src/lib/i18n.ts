@@ -340,6 +340,14 @@ const DICT = {
   "home.featured.subtitle": { en: "Guided explorations — start here and follow the story.", zh: "引导式探索——从这里开始，沿着故事走。" },
   "home.featured.viewAll": { en: "View all journeys", zh: "查看全部旅程" },
 
+  "chat.recommendations": { en: "Continue exploring", zh: "继续探索" },
+  "chat.rec.deepen": { en: "Deeper", zh: "深化探索" },
+  "chat.rec.cause": { en: "Background / Cause", zh: "前因 / 背景" },
+  "chat.rec.compare": { en: "In parallel", zh: "横向比较" },
+  "chat.rec.continue": { en: "Continue journey", zh: "继续旅程" },
+  "chat.rec.journey": { en: "Journey", zh: "旅程" },
+  "chat.rec.journeyTitle": { en: "Journey: {title}", zh: "旅程：《{title}》" },
+
   /* chat */
   "chat.greeting": {
     en: "Welcome! I'm your AI history guide for the Tang Dynasty era (618–907) and its world contemporaries. Ask me about events, people, civilizations — or how China compared with the wider world. I can see what you're currently viewing and jump to the timeline, map or people graph.",

@@ -1,6 +1,8 @@
 "use client";
 
 import type { HistoryEntityLink, HistoryNavigationAction } from "@/lib/explorer";
+import type { NavigatorRecommendation } from "@/lib/learning/navigatorTypes";
+import { getJourneyById } from "@/lib/learning/journeyRepository";
 import { Icon, type IconName } from "@/components/ui/icons";
 import { useExplorer } from "./ExplorerProvider";
 import { useLocale } from "./LocaleProvider";
@@ -135,6 +137,101 @@ export function ActionButtons({ actions }: { actions: HistoryNavigationAction[] 
                             : t("act.focusCiv")}
         </button>
       ))}
+    </div>
+  );
+}
+
+/* ── V0.3 Phase 3D: Navigator recommendations ──────────────────────── */
+
+const REC_TYPES = new Set(["deepen", "cause", "compare", "continue"]);
+const REF_TYPES = new Set(["event", "person", "civilization", "location", "territory"]);
+
+/** fail-closed: drop malformed recommendations instead of crashing. */
+function isValidRecommendation(r: NavigatorRecommendation | null | undefined): r is NavigatorRecommendation {
+  if (!r || typeof r !== "object") return false;
+  if (typeof r.id !== "string" || r.id.length === 0) return false;
+  if (typeof r.titleZh !== "string" || r.titleZh.length === 0) return false;
+  if (typeof r.titleEn !== "string" || r.titleEn.length === 0) return false;
+  if (typeof r.reasonZh !== "string" || typeof r.reasonEn !== "string") return false;
+  if (!REC_TYPES.has(r.type)) return false;
+  if (!Array.isArray(r.entityRefs) || !Array.isArray(r.actions)) return false;
+  for (const ref of r.entityRefs) {
+    if (!ref || typeof ref.id !== "string" || !REF_TYPES.has(ref.type)) return false;
+  }
+  return true;
+}
+
+/** V0.3 — next-step exploration cards, rendered AFTER the AI answer.
+ *  Entity chips + action buttons reuse EntityLinks / ActionButtons —
+ *  navigation always goes through dispatchHistoryAction. */
+export function RecommendationsBlock({
+  recommendations,
+}: {
+  recommendations: NavigatorRecommendation[] | null | undefined;
+}) {
+  const { locale, t } = useLocale();
+  if (!recommendations || recommendations.length === 0) return null;
+  const valid = recommendations.filter(isValidRecommendation);
+  if (valid.length === 0) return null;
+  const zh = locale === "zh";
+
+  const badgeFor = (type: NavigatorRecommendation["type"]) =>
+    type === "deepen"
+      ? t("chat.rec.deepen")
+      : type === "cause"
+        ? t("chat.rec.cause")
+        : type === "compare"
+          ? t("chat.rec.compare")
+          : t("chat.rec.continue");
+
+  return (
+    <div className="mt-4 border-t border-parchment-200 pt-3" aria-label={t("chat.recommendations")}>
+      <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-gold-dark">
+        <Icon name="sparkles" className="h-3.5 w-3.5" />
+        {t("chat.recommendations")}
+      </p>
+      <div className="mt-2.5 space-y-2.5">
+        {valid.map((r) => {
+          const journey = r.journeyId ? getJourneyById(r.journeyId) : null;
+          return (
+            <article
+              key={r.id}
+              className="rounded-lg border border-parchment-200 bg-parchment-50/70 p-3.5"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-dark">
+                  {badgeFor(r.type)}
+                </span>
+                {journey && (
+                  <span className="rounded-full bg-vermilion/10 px-2 py-0.5 text-[10px] font-semibold text-vermilion-dark">
+                    {t("chat.rec.journey")}
+                  </span>
+                )}
+              </div>
+              <h4 className="mt-1.5 font-display text-sm font-bold leading-snug text-ink">
+                {zh ? r.titleZh : r.titleEn}
+              </h4>
+              <p className="mt-0.5 text-xs leading-relaxed text-ink-soft">
+                {zh ? r.reasonZh : r.reasonEn}
+              </p>
+              {journey && (
+                <p className="mt-1 text-[11px] font-medium text-ink-faint">
+                  {t("chat.rec.journeyTitle", { title: zh ? journey.title : journey.titleEn })}
+                </p>
+              )}
+              <div className="mt-2.5 space-y-2">
+                <EntityLinks
+                  links={r.entityRefs.map((ref) => ({
+                    id: ref.id,
+                    type: ref.type,
+                  }))}
+                />
+                <ActionButtons actions={r.actions} />
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 }

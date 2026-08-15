@@ -5,13 +5,14 @@ import type { ChatMessage, ChatResponse } from "@/lib/types";
 import { Icon } from "@/components/ui/icons";
 import { useExplorer } from "./ExplorerProvider";
 import { useLocale } from "./LocaleProvider";
-import { ActionButtons, EntityLinks, RichText } from "./chatBlocks";
+import { ActionButtons, EntityLinks, RecommendationsBlock, RichText } from "./chatBlocks";
 
 interface UiMessage extends ChatMessage {
   source?: "openai" | "local";
   citations?: string[];
   links?: ChatResponse["links"];
   actions?: ChatResponse["actions"];
+  recommendations?: ChatResponse["recommendations"];
 }
 
 /**
@@ -86,6 +87,7 @@ export function AIChat({ className = "" }: { className?: string }) {
           citations: data.citations,
           links: data.links,
           actions: data.actions,
+          recommendations: data.recommendations,
         },
       ]);
     } catch {
@@ -138,6 +140,7 @@ export function AIChat({ className = "" }: { className?: string }) {
                   </div>
                   <EntityLinks links={m.links ?? []} />
                   <ActionButtons actions={m.actions ?? []} />
+                  <RecommendationsBlock recommendations={m.recommendations ?? []} />
                   <div className="flex flex-wrap items-center gap-2 text-[11px] text-ink-faint">
                     <span
                       className={

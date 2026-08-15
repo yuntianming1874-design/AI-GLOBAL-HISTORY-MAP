@@ -30,6 +30,10 @@ g.requestAnimationFrame = (cb: FrameRequestCallback) => setTimeout(() => cb(0), 
 g.cancelAnimationFrame = (id: number) => clearTimeout(id);
 g.MutationObserver = dom.window.MutationObserver;
 g.localStorage = dom.window.localStorage;
+// Node ≥21 ships a read-only global navigator; Node 20 (CI) does not.
+if (typeof (globalThis as { navigator?: unknown }).navigator === "undefined") {
+  g.navigator = dom.window.navigator;
+}
 g.IS_REACT_ACT_ENVIRONMENT = true;
 class MockRO {
   constructor(private cb: (entries: { contentRect: { width: number } }[]) => void) {}

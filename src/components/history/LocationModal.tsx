@@ -109,9 +109,7 @@ export function LocationModal({
 
         <div className="mt-4 flex flex-wrap gap-2 border-t border-parchment-200 pt-3">
           <button
-            onClick={() =>
-              dispatch({ type: "OPEN_LOCATION", id: location.id })
-            }
+            onClick={onClose}
             className="btn-primary !px-3 !py-1.5 text-xs"
           >
             <Icon name="map" className="h-3.5 w-3.5" /> {t("loc.focusOnMap")}

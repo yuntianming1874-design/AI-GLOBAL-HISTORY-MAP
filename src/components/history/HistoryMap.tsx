@@ -264,9 +264,11 @@ export function HistoryMap({ className = "" }: { className?: string }) {
     };
   }, [context.personId, flashFocus]);
 
-  // ?event → fly to the event location, auto-select the marker,
-  // and open the Event Detail popup (state-bleed guard: only when the
-  // event id actually changed)
+  // ?event → fly to the event location and auto-select the marker.
+  // V0.3 fix: inside a Journey (?journey=) the step transition must NOT
+  // auto-open the Event popup (two modals would stack and break the
+  // narrative flow) — the map still flies to and highlights the marker;
+  // manual marker clicks keep opening the modal as before.
   useEffect(() => {
     const id = context.eventId;
     if (id === prevMapEventRef.current) return;
@@ -276,13 +278,19 @@ export function HistoryMap({ className = "" }: { className?: string }) {
       return;
     }
     const event = events.find((e) => e.id === id);
-    setSelectedEvent(event ?? null);
+    if (context.journeyId) {
+      // journey mode: highlight only — no auto popup
+      setSelectedEvent(null);
+    } else {
+      setSelectedEvent(event ?? null);
+    }
     if (event && event.latitude !== null && event.longitude !== null) {
       flashFocus(event.latitude, event.longitude);
     }
-  }, [context.eventId, events, flashFocus]);
+  }, [context.eventId, context.journeyId, events, flashFocus]);
 
   // ?loc → fly to the location and open its detail modal
+  // (same journey-mode rule: fly + highlight, no auto popup)
   useEffect(() => {
     const id = context.locationId;
     if (id === prevLocRef.current) return;
@@ -294,9 +302,9 @@ export function HistoryMap({ className = "" }: { className?: string }) {
     const loc = locations.find((l) => l.id === id);
     if (loc) {
       flashFocus(loc.latitude, loc.longitude);
-      setLocationModalId(id);
+      setLocationModalId(context.journeyId ? null : id);
     }
-  }, [context.locationId, locations, flashFocus]);
+  }, [context.locationId, context.journeyId, locations, flashFocus]);
 
   const toggleCiv = useCallback((id: string) => {
     setVisibleCivIds((prev) => {

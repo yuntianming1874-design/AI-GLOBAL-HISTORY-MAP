@@ -63,7 +63,7 @@ test.describe("V0.2 demo flows", () => {
       .getByPlaceholder(/Ask about the Tang era/)
       .fill("Why does this event matter?");
     await page.getByRole("button", { name: "Send" }).click();
-    await expect(page.getByText("Battle of Talas")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("Battle of Talas").first()).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole("button", { name: "Open event" })).toBeVisible();
 
     await finish();

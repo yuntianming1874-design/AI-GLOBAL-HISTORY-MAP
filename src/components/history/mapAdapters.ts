@@ -92,7 +92,8 @@ function ringToPath(
     .map(([lon, lat]) => projection([lon, lat]))
     .filter((p): p is [number, number] => p !== null);
   if (pts.length === 0) return "";
-  return `${pts.map((p) => `${p[0]},${p[1]}`).join(" ")} `;
+  // valid closed SVG path: "M x,y L x,y … Z" (bare pairs were invalid)
+  return `M ${pts.map((p) => `${p[0]},${p[1]}`).join(" L ")} Z `;
 }
 
 /* ── D3 SVG fallback adapter ───────────────────────────────────────── */

@@ -127,7 +127,7 @@ test.describe("V0.2 demo flows", () => {
     await expect(page.getByText(/What led to An Lushan Rebellion/)).toBeVisible({
       timeout: 15_000,
     });
-    await expect(page.getByText(/Yang Guifei/)).toBeVisible();
+    await expect(page.getByText(/Yang Guifei/).first()).toBeVisible();
   });
 });
 
@@ -139,7 +139,7 @@ test.describe("i18n (language setting)", () => {
     await expect(page.getByText("全球时间轴").first()).toBeVisible();
 
     // language toggle switches to English and persists in the URL
-    await page.getByRole("button", { name: "EN" }).click();
+    await page.getByRole("button", { name: "EN", exact: true }).click();
     await expect(page.getByRole("link", { name: /Overview/ })).toBeVisible();
     await expect(page).toHaveURL(/lang=en/);
     await finish();

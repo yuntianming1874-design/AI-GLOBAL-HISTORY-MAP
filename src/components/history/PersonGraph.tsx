@@ -119,12 +119,14 @@ export function PersonGraph({ className = "" }: { className?: string }) {
   /* ?event → highlight people active in the event's year */
   useEffect(() => {
     const id = context.eventId;
-    if (id === prevEventRef.current) return;
-    prevEventRef.current = id;
-    if (!id || !people) {
+    if (!id) {
       setHighlightIds(new Set());
+      prevEventRef.current = null;
       return;
     }
+    if (!people) return; // wait for data — do NOT consume the guard yet
+    if (id === prevEventRef.current) return;
+    prevEventRef.current = id;
     let cancelled = false;
     fetch(`/api/events/${encodeURIComponent(id)}`)
       .then((r) => (r.ok ? r.json() : null))

@@ -20,7 +20,8 @@
     "test:narrative": "tsx scripts/journey-narrative.test.ts",
     "test:lifespan": "tsx scripts/person-lifespan.test.ts",
     "test:world": "tsx scripts/world-context.test.ts",
-    "test:journey-integration": "tsx scripts/journey-integration.test.ts"
+    "test:journey-integration": "tsx scripts/journey-integration.test.ts",
+    "test:review": "tsx scripts/review.test.ts"
   },
   "dependencies": {
     "d3": "^7.9.0",

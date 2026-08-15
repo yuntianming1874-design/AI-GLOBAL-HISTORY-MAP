@@ -1,6 +1,6 @@
 # AI Global History Map — Historical Data Provenance & Accuracy Audit
 
-> 生成日期：2026-08-14 · 范围：Functional Alpha 全量 157 实体（重点：关键人物/事件） · 模式：只读审计（未修改任何 seed 数据）
+> 生成日期：2026-08-15 · 范围：Functional Alpha 全量 157 实体（重点：关键人物/事件） · 模式：只读审计（未修改任何 seed 数据）
 
 ## 来源等级定义
 

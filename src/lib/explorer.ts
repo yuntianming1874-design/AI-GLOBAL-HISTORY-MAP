@@ -102,7 +102,7 @@ export const CONTEXT_PARAMS: Record<keyof HistoryContext, string> = {
 };
 
 /** Non-context params that are allowed to survive the whitelist (i18n). */
-export const EXTRA_ALLOWED_PARAMS = ["lang"] as const;
+export const EXTRA_ALLOWED_PARAMS = ["lang", "review"] as const;
 
 /** Entity ids are slugs: [A-Za-z0-9_-]+ — anything else is dropped. */
 const ID_PATTERN = /^[A-Za-z0-9_-]+$/;

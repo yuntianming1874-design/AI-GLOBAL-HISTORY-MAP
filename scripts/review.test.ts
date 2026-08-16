@@ -125,11 +125,12 @@ check("synonym 阿巴斯 accepted", evaluateRecallAnswer(q2, "唐朝与阿巴斯
 
 /* ── 问题不引用 Journey 之外的事实 ─────────────────────────────────── */
 
-const allStepIds = new Set(journey.steps.map((s) => s.id));
 for (const q of RECALL_QUESTIONS) {
+  const qJourney = getJourneyBySlug(q.journeyId);
+  const qStepIds = new Set(qJourney?.steps.map((s) => s.id) ?? []);
   check(
     `all sources inside journey (${q.id})`,
-    q.sourceStepIds.every((id) => allStepIds.has(id)),
+    q.sourceStepIds.every((id) => qStepIds.has(id)),
     true,
   );
 }

@@ -7,6 +7,7 @@ import type {
   PersonDTO,
 } from "@/lib/types";
 import { CATEGORY_META, formatYear } from "@/lib/theme";
+import { zhRegionNames } from "@/data/seed/zhMisc";
 import { formatYearSpan } from "@/lib/provenance";
 import { Icon } from "@/components/ui/icons";
 import { EventAIExplanation, EventMiniMap } from "./EventPageWidgets";
@@ -82,7 +83,7 @@ export function EventDetailView({
             className="rounded-full px-2.5 py-1 text-xs font-semibold text-white"
             style={{ backgroundColor: category.color }}
           >
-            {category.label}
+            {locale === "zh" ? t(`cat.${event.category}` as never) : category.label}
           </span>
           <span
             className="ml-auto flex items-center gap-0.5 text-gold-dark"
@@ -101,7 +102,7 @@ export function EventDetailView({
         <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink">
           {zh(event.title, event.chineseTitle)}
           <span className="ml-3 font-sans text-lg font-normal text-ink-faint">
-            {locale === "zh" ? event.title : event.chineseTitle}
+
           </span>
         </h1>
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-ink-soft">
@@ -242,13 +243,11 @@ export function EventDetailView({
                   />
                   <span>
                     <span className="block text-sm font-bold text-ink">
-                      {c.name}{" "}
-                      <span className="font-sans text-xs font-normal text-ink-faint">
-                        {c.chineseName}
-                      </span>
+                      {zh(c.name, c.chineseName)}
                     </span>
                     <span className="block text-xs text-ink-faint">
-                      {c.region} · {formatYear(c.startYear)}–{formatYear(c.endYear)}
+                      {locale === "zh" ? (zhRegionNames[c.region] ?? c.region) : c.region} ·{" "}
+                      {formatYear(c.startYear)}–{formatYear(c.endYear)}
                     </span>
                   </span>
                 </Link>

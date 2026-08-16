@@ -1,6 +1,7 @@
 "use client";
 
 import type { EventDTO } from "@/lib/types";
+import { civilizations as seedCivs, locations as seedLocs, people as seedPeople } from "@/data/seed";
 import { CATEGORY_META } from "@/lib/theme";
 import { formatYearSpan } from "@/lib/provenance";
 import { Icon } from "@/components/ui/icons";
@@ -10,6 +11,10 @@ import { useLocale } from "./LocaleProvider";
  * Presentational event card — renders year, category, significance,
  * description, civilization, location and participant chips.
  */
+const civZh = new Map(seedCivs.map((c) => [c.id, c.chineseName]));
+const personZh = new Map(seedPeople.map((p) => [p.id, p.chineseName]));
+const locZh = new Map(seedLocs.map((l) => [l.id, l.chineseName]));
+
 export function EventCard({
   event,
   onSelect,
@@ -54,7 +59,7 @@ export function EventCard({
           className="rounded-full px-2 py-0.5 text-xs font-semibold text-white"
           style={{ backgroundColor: category.color }}
         >
-          {category.label}
+          {locale === "zh" ? t(`cat.${event.category}` as never) : category.label}
         </span>
         <span
           className="ml-auto flex items-center gap-0.5 text-gold-dark"
@@ -74,9 +79,6 @@ export function EventCard({
       <div>
         <h3 className="font-display text-base font-bold leading-snug text-ink">
           {zh(event.title, event.chineseTitle)}
-          <span className="ml-2 font-sans text-sm font-normal text-ink-faint">
-            {locale === "zh" ? event.title : event.chineseTitle}
-          </span>
         </h3>
       </div>
 
@@ -91,12 +93,16 @@ export function EventCard({
             style={{ backgroundColor: event.civilizationColor }}
             aria-hidden="true"
           />
-          {event.civilizationName}
+          {locale === "zh"
+            ? civZh.get(event.civilizationId) ?? event.civilizationName
+            : event.civilizationName}
         </span>
         {event.locationName && (
           <span className="inline-flex items-center gap-1">
             <Icon name="map" className="h-3.5 w-3.5" />
-            {event.locationName}
+            {locale === "zh"
+              ? locZh.get(event.locationId ?? "") ?? event.locationName
+              : event.locationName}
           </span>
         )}
         {event.participants.length > 0 && (
@@ -110,8 +116,14 @@ export function EventCard({
                   className="chip !border-parchment-200 !bg-parchment-100 !px-1.5 !py-0"
                   title={role ? t("ec.role", { role }) : undefined}
                 >
-                  {event.participantsNames[i] ?? pid}
-                  {role ? <span className="ml-0.5 text-[10px] italic opacity-70">·{role}</span> : null}
+                  {locale === "zh"
+                    ? personZh.get(pid) ?? event.participantsNames[i] ?? pid
+                    : event.participantsNames[i] ?? pid}
+                  {role ? (
+                    <span className="ml-0.5 text-[10px] italic opacity-70">
+                      ·{locale === "zh" ? ({ instigator: "发起", participant: "参与", witness: "见证" }[role] ?? role) : role}
+                    </span>
+                  ) : null}
                 </span>
               );
             })}

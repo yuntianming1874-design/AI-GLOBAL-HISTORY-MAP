@@ -458,7 +458,7 @@ export function Timeline({ className = "" }: { className?: string }) {
                       className="fill-ink-soft"
                       style={{ fontSize: 11, fontWeight: 600 }}
                     >
-                      {civ.name}
+                      {locale === "zh" ? civ.chineseName : civ.name}
                     </text>
                   </g>
                 );
@@ -490,7 +490,11 @@ export function Timeline({ className = "" }: { className?: string }) {
                       setTooltip({
                         x: cx,
                         y: y0 - 14,
-                        text: `${locale === "zh" ? e.chineseTitle : e.title} · ${formatYear(e.year)} · ${e.civilizationName}`,
+                        text: `${locale === "zh" ? e.chineseTitle : e.title} · ${formatYear(e.year)} · ${
+                          locale === "zh"
+                            ? (civilizations?.find((c) => c.id === e.civilizationId)?.chineseName ?? e.civilizationName)
+                            : e.civilizationName
+                        }`,
                       })
                     }
                     onMouseMove={(ev) => {

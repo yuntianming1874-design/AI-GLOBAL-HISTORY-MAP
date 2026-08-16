@@ -11,7 +11,7 @@ import { useLocale } from "./LocaleProvider";
  * so students/history enthusiasts can review without re-entering.
  */
 export function JourneysGrid({ journeys }: { journeys: Journey[] }) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {journeys.map((j) => (
@@ -24,9 +24,11 @@ export function JourneysGrid({ journeys }: { journeys: Journey[] }) {
               {j.startYear}–{j.endYear} · {t("journey.stepsCount", { n: j.steps.length })}
             </p>
             <h2 className="mt-1 font-display text-lg font-bold leading-snug text-ink group-hover:text-vermilion-dark">
-              {j.title}
+              {locale === "zh" ? j.title : j.titleEn}
             </h2>
-            <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-soft">{j.description}</p>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-soft">
+              {locale === "zh" ? j.description : j.descriptionEn}
+            </p>
           </Link>
           <div className="mt-auto flex flex-wrap gap-2 border-t border-parchment-200 pt-3">
             <Link href={`/journeys/${j.slug}`} className="btn-primary !px-3 !py-1.5 text-xs">

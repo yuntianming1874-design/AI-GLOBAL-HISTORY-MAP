@@ -91,7 +91,7 @@ export function AIChat({ className = "" }: { className?: string }) {
         },
       ]);
     } catch {
-      setError("The assistant is unavailable right now — please try again.");
+      setError(t("chat.error"));
     } finally {
       setBusy(false);
       inputRef.current?.focus();

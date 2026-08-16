@@ -129,10 +129,10 @@ export function PersonDrawer({
                   style={{ backgroundColor: person.civilizationColor ?? "#8a7a66" }}
                   aria-hidden="true"
                 />
-                {person.name}
+                {zh(person.name, person.chineseName)}
               </h3>
               <p className="mt-0.5 text-xs text-ink-faint">
-                {person.chineseName} · {locale === "zh" ? (zhPersonRoles[person.id] ?? person.role) : person.role}
+                {zh(person.chineseName, person.name)} · {locale === "zh" ? (zhPersonRoles[person.id] ?? person.role) : person.role}
                 {person.civilizationName ? ` · ${person.civilizationName}` : ""}
               </p>
               {person.provenance?.roles && person.provenance.roles.length > 0 && (

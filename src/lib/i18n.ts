@@ -54,7 +54,7 @@ const DICT = {
   "home.stat.years": { en: "Years covered", zh: "覆盖年份" },
   "home.datamode.seed": {
     en: "Data mode: built-in seed data (set DATABASE_URL + run `npm run seed:db` to switch)",
-    zh: "数据模式：内置种子数据（设置 DATABASE_URL 并运行 `npm run seed:db` 可切换）",
+    zh: "数据模式：内置种子数据（无需配置；接入数据库后可切换）",
   },
   "home.datamode.pg": { en: "Data mode: PostgreSQL", zh: "数据模式：PostgreSQL" },
 
@@ -103,7 +103,7 @@ const DICT = {
   "page.chat.title": { en: "AI History Assistant", zh: "AI 历史助手" },
   "page.chat.subtitle": {
     en: "Ask about events, people and civilizations of the Tang era. Works offline via a local knowledge engine; upgrades to an LLM automatically when OPENAI_API_KEY is configured.",
-    zh: "询问唐朝时代的事件、人物与文明。离线本地知识引擎即可运行；配置 OPENAI_API_KEY 后自动升级为 LLM。",
+    zh: "询问唐朝时代的事件、人物与文明。离线本地知识引擎即可运行；配置 AI 密钥后自动升级为云端大模型。",
   },
 
   /* categories */

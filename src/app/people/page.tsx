@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { PersonGraph } from "@/components/history/PersonGraph";
 import { PageHeader } from "@/components/history/PageHeader";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "People & Relationships — AI Global History Map",
-  description:
-    "Force-directed graph of 25 key figures of the Tang era and its world: emperors, poets, generals, monks and caliphs.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const accept = headers().get("accept-language") ?? "";
+  const isZh = /\bzh(?:-|\b|$)/i.test(accept);
+  return {
+    title: isZh ? "人物与关系 — AI 全球历史地图" : "People & Relationships — AI Global History Map",
+    description: isZh ? "唐朝时期及其世界的 25 位关键人物：帝王、诗人、将领、僧侣与哈里发的人物关系图谱。" : "Interactive historical atlas of the Tang Dynasty era (618–907) and its world.",
+  };
+}
 
 export default function PeoplePage() {
   return (

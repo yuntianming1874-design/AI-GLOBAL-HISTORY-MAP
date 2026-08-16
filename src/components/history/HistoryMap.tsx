@@ -217,9 +217,13 @@ export function HistoryMap({ className = "" }: { className?: string }) {
         for (const e of evts) {
           if (e.locationId && e.latitude !== null && e.longitude !== null && !seen.has(e.locationId)) {
             seen.add(e.locationId);
+            const loc = locs.find((l) => l.id === e.locationId);
             points.push({
               id: `p-${id}-${e.locationId}`,
-              name: `${person?.name ?? id} · ${e.locationName ?? e.locationId}`,
+              name: `${zh(person?.name ?? id, person?.chineseName ?? null)} · ${zh(
+                e.locationName ?? e.locationId,
+                loc?.chineseName ?? null,
+              )}`,
               latitude: e.latitude,
               longitude: e.longitude,
               locationId: e.locationId,
@@ -231,7 +235,10 @@ export function HistoryMap({ className = "" }: { className?: string }) {
           if (seat && !seen.has(seat.id)) {
             points.push({
               id: `p-${id}-seat`,
-              name: `${person.name} · ${seat.name} (seat of ${person.civilizationName ?? ""})`,
+              name:
+                locale === "zh"
+                  ? `${person.chineseName} · ${seat.chineseName}（都城）`
+                  : `${person.name} · ${seat.name} (seat of ${person.civilizationName ?? ""})`,
               latitude: seat.latitude,
               longitude: seat.longitude,
               locationId: seat.id,
@@ -476,7 +483,7 @@ export function HistoryMap({ className = "" }: { className?: string }) {
                 className="inline-block h-0.5 w-4 border-t-2 border-dashed"
                 style={{ borderColor: r.color }}
               />
-              {r.name}
+              {zh(r.name, r.chineseName ?? null)}
             </button>
           ))}
           {showTerritories && (

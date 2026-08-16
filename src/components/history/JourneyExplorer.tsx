@@ -22,7 +22,7 @@ import { ContemporaryWorldPanel } from "./ContemporaryWorldPanel";
 export function JourneyExplorer({ className = "" }: { className?: string }) {
   const { context, dispatch } = useExplorer();
   const router = useRouter();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
 
   const journey = useMemo(
     () => (context.journeyId ? getJourneyBySlug(context.journeyId) : null),
@@ -79,9 +79,11 @@ export function JourneyExplorer({ className = "" }: { className?: string }) {
               {t("journey.badge")}
             </p>
             <h1 className="mt-1 font-display text-xl font-bold text-ink sm:text-2xl">
-              {journey.title}
+              {locale === "zh" ? journey.title : journey.titleEn}
             </h1>
-            <p className="mt-1 text-sm text-ink-soft">{journey.subtitle}</p>
+            <p className="mt-1 text-sm text-ink-soft">
+              {locale === "zh" ? journey.subtitle : journey.subtitleEn}
+            </p>
           </div>
           <div className="flex flex-col items-end gap-1.5">
             <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-xs font-semibold text-gold-dark">

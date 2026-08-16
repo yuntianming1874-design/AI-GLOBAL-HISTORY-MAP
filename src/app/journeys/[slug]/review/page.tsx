@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getJourneyBySlug } from "@/lib/learning/journeyRepository";
 import { JourneyReview } from "@/components/history/JourneyReview";
@@ -8,14 +9,23 @@ export const dynamic = "force-dynamic";
 
 interface Props {
   params: { slug: string };
+  searchParams: { lang?: string };
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export function generateMetadata({ params, searchParams }: Props): Metadata {
   const journey = getJourneyBySlug(params.slug);
   if (!journey) return { title: "Review not found" };
+  const accept = headers().get("accept-language") ?? "";
+  const isZh =
+    searchParams.lang === "zh"
+      ? true
+      : searchParams.lang === "en"
+        ? false
+        : /\bzh(?:-|\b|$)/i.test(accept);
+  const title = isZh ? journey.title : journey.titleEn;
   return {
-    title: `${journey.title} · Review — AI Global History Map`,
-    description: `Recall and review what you learned in “${journey.title}”.`,
+    title: `${title} · Review — AI Global History Map`,
+    description: `Recall and review what you learned in “${title}”.`,
     alternates: { canonical: `/journeys/${journey.slug}/review` },
   };
 }

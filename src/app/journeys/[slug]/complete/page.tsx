@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { t } from "@/lib/i18n";
@@ -16,12 +17,20 @@ interface Props {
   searchParams: { lang?: string };
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export function generateMetadata({ params, searchParams }: Props): Metadata {
   const journey = getJourneyBySlug(params.slug);
   if (!journey) return { title: "Journey not found" };
+  const accept = headers().get("accept-language") ?? "";
+  const isZh =
+    searchParams.lang === "zh"
+      ? true
+      : searchParams.lang === "en"
+        ? false
+        : /\bzh(?:-|\b|$)/i.test(accept);
+  const title = isZh ? journey.title : journey.titleEn;
   return {
-    title: `${journey.title} · Complete — AI Global History Map`,
-    description: `You completed “${journey.title}”. Review what you learned.`,
+    title: `${title} · Complete — AI Global History Map`,
+    description: `You completed “${title}”. Review what you learned.`,
     alternates: { canonical: `/journeys/${journey.slug}/complete` },
   };
 }
@@ -66,7 +75,9 @@ export default function JourneyCompletePage({ params, searchParams }: Props) {
             {t(locale, "complete.title")}
           </h1>
           <p className="mt-2 text-sm text-ink-soft">
-            {t(locale, "complete.subtitle", { title: journey.title })}
+            {t(locale, "complete.subtitle", {
+              title: locale === "zh" ? journey.title : journey.titleEn,
+            })}
           </p>
 
           {/* learning statistics (from journey steps) */}
@@ -96,11 +107,12 @@ export default function JourneyCompletePage({ params, searchParams }: Props) {
         </h2>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {stats.coreMemories.map((m, i) => (
-            <span key={i} className="chip !border-gold/40 !bg-gold/10 !text-gold-dark">
+            <span
+              key={i}
+              className="chip !border-gold/40 !bg-gold/10 !text-gold-dark"
+              title={zh ? m.labelEn : m.labelZh}
+            >
               {zh ? m.labelZh : m.labelEn}
-              <span className="ml-1 font-mono text-[10px] text-ink-faint">
-                {zh ? m.labelEn : m.labelZh}
-              </span>
             </span>
           ))}
         </div>

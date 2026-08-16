@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { t } from "@/lib/i18n";
 import { getJourneyBySlug } from "@/lib/learning/journeyRepository";
 import { PageHeader } from "@/components/history/PageHeader";
@@ -13,15 +14,24 @@ interface Props {
   searchParams: { lang?: string };
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export function generateMetadata({ params, searchParams }: Props): Metadata {
   const journey = getJourneyBySlug(params.slug);
   if (!journey) return { title: "Journey not found" };
+  const accept = headers().get("accept-language") ?? "";
+  const isZh =
+    searchParams.lang === "zh"
+      ? true
+      : searchParams.lang === "en"
+        ? false
+        : /\bzh(?:-|\b|$)/i.test(accept);
+  const title = isZh ? journey.title : journey.titleEn;
+  const description = isZh ? journey.description : journey.descriptionEn;
   return {
-    title: `${journey.title} — AI Global History Map`,
-    description: journey.description.slice(0, 160),
+    title: `${title} — AI Global History Map`,
+    description: description.slice(0, 160),
     openGraph: {
-      title: journey.title,
-      description: journey.description.slice(0, 200),
+      title,
+      description: description.slice(0, 200),
     },
     alternates: { canonical: `/journeys/${journey.slug}` },
   };
@@ -49,9 +59,11 @@ export default function JourneyDetailPage({ params, searchParams }: Props) {
               {t(locale, `journey.difficulty.${journey.difficulty}` as never)}
             </p>
             <h1 className="mt-2 font-display text-2xl font-bold leading-tight text-ink sm:text-3xl">
-              {journey.title}
+              {locale === "zh" ? journey.title : journey.titleEn}
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-ink-soft">{journey.description}</p>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+              {locale === "zh" ? journey.description : journey.descriptionEn}
+            </p>
           </div>
           <div className="flex flex-col items-stretch gap-2">
             <JourneyStartButton journeyId={journey.id} />
@@ -69,7 +81,7 @@ export default function JourneyDetailPage({ params, searchParams }: Props) {
                 {s.order}
               </span>
               <div className="min-w-0">
-                <p className="font-display text-sm font-bold text-ink">{s.title}</p>
+                <p className="font-display text-sm font-bold text-ink">{locale === "zh" ? s.title : s.titleEn}</p>
                 <p className="mt-0.5 text-xs leading-relaxed text-ink-soft">
                   {s.startYear !== undefined && s.endYear !== undefined
                     ? `${s.startYear}–${s.endYear}`

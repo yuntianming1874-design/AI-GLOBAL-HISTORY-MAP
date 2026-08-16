@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { locations as seedLocations } from "@/data/seed";
 import type { GeoJSONSource } from "mapbox-gl";
 import type { Civilization, EventDTO, TerritoryDTO } from "@/lib/types";
 import { CATEGORY_META } from "@/lib/theme";
@@ -146,6 +147,8 @@ export function createD3Map(
     d3.zoomIdentity.translate(width * 0.05, height * 0.01),
   );
 
+  const locZhName = new Map(seedLocations.map((l) => [l.id, l.chineseName]));
+
   const tooltip = d3
     .select(container)
     .append("div")
@@ -267,7 +270,13 @@ export function createD3Map(
         .attr("stroke-width", 1.5)
         .style("cursor", "pointer")
         .on("click", (_, n) => handlers.onNodeClick(n.locationId))
-        .on("mouseenter", (ev, n) => showTooltip(n.name, ev.clientX, ev.clientY))
+        .on("mouseenter", (ev, n) =>
+          showTooltip(
+            data.locale === "zh" ? (locZhName.get(n.locationId) ?? n.name) : n.name,
+            ev.clientX,
+            ev.clientY,
+          ),
+        )
         .on("mousemove", (ev) => {
           const rect = container.getBoundingClientRect();
           tooltip

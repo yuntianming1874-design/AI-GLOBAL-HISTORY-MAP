@@ -1,5 +1,6 @@
 "use client";
 
+import { locations as seedLocations } from "@/data/seed";
 import type { TradeRoute } from "@/lib/geo";
 import { Icon } from "@/components/ui/icons";
 import { useExplorer } from "./ExplorerProvider";
@@ -49,8 +50,7 @@ export function RouteModal({
             style={{ borderColor: route.color }}
             aria-hidden="true"
           />
-          {route.name}
-          <span className="font-sans text-sm font-normal text-ink-faint">{route.chineseName}</span>
+          {zh(route.name, route.chineseName)}
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-ink-soft">{zh(route.description, route.zhDescription)}</p>
 
@@ -66,7 +66,7 @@ export function RouteModal({
                   onClick={() => onSelectNode(node.locationId)}
                   className="rounded-md px-2 py-1 text-sm font-semibold text-ink transition hover:bg-gold/15 hover:text-gold-dark"
                 >
-                  {node.name}
+                  {zh(node.name, seedLocations.find((l) => l.id === node.locationId)?.chineseName ?? null)}
                 </button>
                 {i < route.nodes.length - 1 && (
                   <Icon name="chevron-down" className="h-3 w-3 -rotate-90 text-ink-faint" />

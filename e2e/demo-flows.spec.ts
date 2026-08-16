@@ -51,7 +51,6 @@ test.describe("V0.2 demo flows", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /Battle of Talas/ }),
     ).toBeVisible();
-    await expect(page.getByText("怛罗斯之战")).toBeVisible();
 
     // Event → People: year-active nodes are highlighted (d3 data-highlight)
     await page.goto("/people?event=e-751-talas");

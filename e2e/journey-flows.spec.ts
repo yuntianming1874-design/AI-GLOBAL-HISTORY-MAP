@@ -48,7 +48,7 @@ test.describe("V0.3 journey flows", () => {
     await expect(
       page.locator('svg[aria-label="Global history timeline 500–1000 CE"]'),
     ).toBeVisible();
-    await expect(page.locator("svg[aria-label*=world map]").first()).toBeVisible();
+    await expect(page.locator('svg[aria-label*="Historical world map"]')).toBeVisible();
 
     // Related-entity chip → Event Detail deep link
     await page.getByRole("button", { name: /Open Battle of Talas/ }).click();

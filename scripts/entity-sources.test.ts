@@ -39,12 +39,23 @@ const AUTHORITY = ["A", "B", "C", "D", "E"];
 
 for (const src of ENTITY_SOURCES) {
   check(`${src.entityId} sourceTitle non-empty`, src.sourceTitle.trim().length >= 3, true);
-  check(`${src.entityId} URL is null (no guessing)`, src.sourceUrl === null || src.sourceUrl === undefined, true);
-  check(`${src.entityId} reviewStatus pending`, src.reviewStatus, "pending");
   check(`${src.entityId} entity known`, isKnownEntityId(src.entityId), true);
   check(`${src.entityId} sourceType valid`, SOURCE_TYPES.includes(src.sourceType), true);
   check(`${src.entityId} authority valid`, AUTHORITY.includes(src.authorityLevel), true);
+  if (src.reviewStatus === "verified") {
+    // policy: human-verified sources carry a real http(s) URL + reviewedAt
+    check(`${src.entityId} verified has URL`, typeof src.sourceUrl === "string" && /^https?:\/\//.test(src.sourceUrl), true);
+    check(`${src.entityId} verified has reviewedAt`, typeof src.reviewedAt === "string" && src.reviewedAt.length > 0, true);
+  } else {
+    // policy: pending sources must NOT carry a guessed URL
+    check(`${src.entityId} pending has no URL`, src.sourceUrl === null || src.sourceUrl === undefined, true);
+    check(`${src.entityId} pending status`, src.reviewStatus, "pending");
+  }
 }
+
+/* ── 人工确认结果（用户 2026-08-16 核对）───────────────────────────── */
+check("10 sources verified", ENTITY_SOURCES.filter((s) => s.reviewStatus === "verified").length, 10);
+check("2 sources stay pending", ENTITY_SOURCES.filter((s) => s.reviewStatus === "pending").length, 2);
 
 /* ── factKey 绑定 ─────────────────────────────────────────────────── */
 

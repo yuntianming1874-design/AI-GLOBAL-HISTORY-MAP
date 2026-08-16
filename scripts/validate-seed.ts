@@ -330,9 +330,15 @@ const REVIEW = ["verified", "pending"];
     if (!src.sourceTitle || src.sourceTitle.trim().length < 3) {
       errors.push(`entity source ${src.entityId}: empty sourceTitle`);
     }
-    if (src.sourceUrl !== undefined && src.sourceUrl !== null) {
-      if (!/^https?:\/\//.test(src.sourceUrl)) {
-        errors.push(`entity source ${src.entityId}: sourceUrl 非法（必须 null 或 http(s) 链接）`);
+    if (src.reviewStatus === "verified") {
+      // 政策：人工确认过的来源必须带合法 http(s) 链接
+      if (!src.sourceUrl || !/^https?:\/\//.test(src.sourceUrl)) {
+        errors.push(`entity source ${src.entityId}: reviewStatus=verified 必须带合法 sourceUrl`);
+      }
+    } else {
+      // 政策：未经人工确认的来源禁止猜测 URL
+      if (src.sourceUrl !== undefined && src.sourceUrl !== null) {
+        errors.push(`entity source ${src.entityId}: pending 来源不得有 sourceUrl（禁止猜测）`);
       }
     }
     if (!SOURCE_TYPES.includes(src.sourceType)) {

@@ -16,6 +16,7 @@ import { Icon } from "@/components/ui/icons";
 import { useExplorer } from "./ExplorerProvider";
 import { useLocale } from "./LocaleProvider";
 import { PersonDrawer } from "./PersonDrawer";
+import { cachedFetchJson } from "./fetchCache";
 
 interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
@@ -68,22 +69,10 @@ export function PersonGraph({ className = "" }: { className?: string }) {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/api/people").then((r) => {
-        if (!r.ok) throw new Error("people");
-        return r.json();
-      }),
-      fetch("/api/relationships").then((r) => {
-        if (!r.ok) throw new Error("relationships");
-        return r.json();
-      }),
-      fetch("/api/events").then((r) => {
-        if (!r.ok) throw new Error("events");
-        return r.json();
-      }),
-      fetch("/api/locations").then((r) => {
-        if (!r.ok) throw new Error("locations");
-        return r.json();
-      }),
+      cachedFetchJson("/api/people"),
+      cachedFetchJson("/api/relationships"),
+      cachedFetchJson("/api/events"),
+      cachedFetchJson("/api/locations"),
     ])
       .then(([ps, rs, evts, locs]) => {
         if (cancelled) return;

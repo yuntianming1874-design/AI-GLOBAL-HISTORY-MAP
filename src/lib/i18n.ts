@@ -285,6 +285,7 @@ const DICT = {
   "world.confidence.disputed": { en: "disputed", zh: "存在争议" },
   "journey.reviewNow": { en: "Start Review", zh: "开始复习" },
   "journey.enter": { en: "Enter journey", zh: "进入旅程" },
+  "journey.stepsCount": { en: "{n} steps", zh: "{n} 个节点" },
   "complete.pageTitle": { en: "Journey Complete", zh: "旅程完成" },
   "complete.pageSubtitle": { en: "You finished the journey — now consolidate.", zh: "你已完成这段旅程——现在巩固所学。" },
   "complete.badge": { en: "Completed", zh: "已完成" },
@@ -474,10 +475,11 @@ export function t(
 export function detectLocale(
   urlLang: string | null,
   stored: string | null,
+  fallback: Locale = "en",
 ): Locale {
   if (urlLang === "zh" || urlLang === "en") return urlLang;
   if (stored === "zh" || stored === "en") return stored;
-  return "en";
+  return fallback;
 }
 
 export const LOCALE_STORAGE_KEY = "aghm.locale";

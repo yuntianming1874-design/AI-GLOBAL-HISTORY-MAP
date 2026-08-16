@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { Journey, JourneyStep } from "@/lib/learning/journeyTypes";
 import { narrateStep } from "@/lib/learning/narrator";
+import { entityDisplayLabel, entityTypeLabel } from "@/lib/learning/entityLabels";
 import { formatYearSpan } from "@/lib/provenance";
 import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
@@ -56,13 +57,16 @@ export function StoryPanel({
   /* grouped related entities — explicit grouped ids win, otherwise derived
    * from surroundingEntities by type (single data source). */
   const groups = useMemo(() => {
-    const byType = new Map<string, { id: string; type: string }[]>();
+    const byType = new Map<string, { id: string; type: "event" | "person" | "civilization" | "location" | "territory" }[]>();
     for (const ref of step.surroundingEntities) {
       const list = byType.get(ref.type) ?? [];
       list.push({ id: ref.id, type: ref.type });
       byType.set(ref.type, list);
     }
-    const pick = (type: string, explicit: string[] | undefined) => {
+    const pick = (
+      type: "event" | "person" | "civilization" | "location" | "territory",
+      explicit: string[] | undefined,
+    ) => {
       const ids = explicit && explicit.length > 0 ? explicit : (byType.get(type) ?? []).map((x) => x.id);
       return ids.map((id) => ({ id, type }));
     };
@@ -91,7 +95,7 @@ export function StoryPanel({
     }
   };
 
-  const renderChips = (list: { id: string; type: string }[]) =>
+  const renderChips = (list: { id: string; type: "event" | "person" | "civilization" | "location" | "territory" }[]) =>
     list.length > 0 ? (
       <div className="flex flex-wrap gap-1.5">
         {list.map((ref) => (
@@ -99,9 +103,15 @@ export function StoryPanel({
             key={`${ref.type}:${ref.id}`}
             onClick={() => chipAction(ref.type, ref.id)}
             className="chip transition hover:border-gold hover:shadow-sm"
-            aria-label={t("journey.openEntity", { id: ref.id })}
+            aria-label={t("journey.openEntity", {
+              id: entityDisplayLabel(ref, locale),
+            })}
+            title={ref.id}
           >
-            {ref.id}
+            <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-ink-faint">
+              {entityTypeLabel(ref.type, locale)}
+            </span>
+            {entityDisplayLabel(ref, locale)}
           </button>
         ))}
       </div>

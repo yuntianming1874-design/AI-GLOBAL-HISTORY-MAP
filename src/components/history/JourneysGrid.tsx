@@ -21,7 +21,7 @@ export function JourneysGrid({ journeys }: { journeys: Journey[] }) {
         >
           <Link href={`/journeys/${j.slug}`} className="block">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-gold-dark">
-              {j.startYear}–{j.endYear} · {j.steps.length} steps
+              {j.startYear}–{j.endYear} · {t("journey.stepsCount", { n: j.steps.length })}
             </p>
             <h2 className="mt-1 font-display text-lg font-bold leading-snug text-ink group-hover:text-vermilion-dark">
               {j.title}

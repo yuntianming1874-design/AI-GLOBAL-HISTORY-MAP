@@ -11,6 +11,7 @@ import {
 import { formatYearSpan } from "@/lib/provenance";
 import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
+import { cachedFetchJson } from "./fetchCache";
 
 /**
  * V0.3 Phase 2 — World Context (enhanced).
@@ -31,14 +32,8 @@ export function ContemporaryWorldPanel({ year }: { year: number | null }) {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/api/events").then((r) => {
-        if (!r.ok) throw new Error();
-        return r.json();
-      }),
-      fetch("/api/civilizations").then((r) => {
-        if (!r.ok) throw new Error();
-        return r.json();
-      }),
+      cachedFetchJson("/api/events"),
+      cachedFetchJson("/api/civilizations"),
     ])
       .then(([evts, civs]) => {
         if (cancelled) return;

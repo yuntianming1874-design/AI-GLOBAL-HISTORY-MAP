@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { t } from "@/lib/i18n";
 import { getJourneyBySlug } from "@/lib/learning/journeyRepository";
 import { PageHeader } from "@/components/history/PageHeader";
 import { JourneyStartButton } from "./JourneyStartButton";
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic";
 
 interface Props {
   params: { slug: string };
+  searchParams: { lang?: string };
 }
 
 export function generateMetadata({ params }: Props): Metadata {
@@ -25,9 +27,10 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function JourneyDetailPage({ params }: Props) {
+export default function JourneyDetailPage({ params, searchParams }: Props) {
   const journey = getJourneyBySlug(params.slug);
   if (!journey) notFound();
+  const locale = searchParams.lang === "zh" ? "zh" : "en";
 
   return (
     <div className="space-y-6">
@@ -41,9 +44,9 @@ export default function JourneyDetailPage({ params }: Props) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-gold-dark">
-              {journey.startYear}–{journey.endYear} · {journey.steps.length}{" "}
-              {journey.steps.length > 1 ? "steps" : "step"} · {journey.estimatedMinutes} min ·{" "}
-              {journey.difficulty}
+              {journey.startYear}–{journey.endYear} · {t(locale, "journey.stepsCount", { n: journey.steps.length })} ·{" "}
+              {t(locale, "journey.minutes", { m: journey.estimatedMinutes })} ·{" "}
+              {t(locale, `journey.difficulty.${journey.difficulty}` as never)}
             </p>
             <h1 className="mt-2 font-display text-2xl font-bold leading-tight text-ink sm:text-3xl">
               {journey.title}
@@ -58,7 +61,7 @@ export default function JourneyDetailPage({ params }: Props) {
       </section>
 
       <section className="panel p-6">
-        <h2 className="font-display text-base font-bold text-ink">Journey steps</h2>
+        <h2 className="font-display text-base font-bold text-ink">{t(locale, "journey.steps")}</h2>
         <ol className="mt-4 space-y-3">
           {journey.steps.map((s) => (
             <li key={s.id} className="flex gap-3 rounded-lg border border-parchment-200 bg-parchment-50/70 p-3.5">

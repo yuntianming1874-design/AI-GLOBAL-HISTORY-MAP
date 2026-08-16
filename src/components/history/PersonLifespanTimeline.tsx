@@ -12,6 +12,7 @@ import {
 import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
 import { useExplorer } from "./ExplorerProvider";
+import { cachedFetchJson } from "./fetchCache";
 
 /**
  * V0.3 Phase 2 — Person Lifespan Timeline.
@@ -43,14 +44,8 @@ export function PersonLifespanTimeline({
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/api/people").then((r) => {
-        if (!r.ok) throw new Error();
-        return r.json();
-      }),
-      fetch("/api/events").then((r) => {
-        if (!r.ok) throw new Error();
-        return r.json();
-      }),
+      cachedFetchJson("/api/people"),
+      cachedFetchJson("/api/events"),
     ])
       .then(([ps, evts]) => {
         if (cancelled) return;

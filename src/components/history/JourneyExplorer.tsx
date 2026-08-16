@@ -5,13 +5,11 @@ import { useRouter } from "next/navigation";
 import { useExplorer } from "./ExplorerProvider";
 import { useLocale } from "./LocaleProvider";
 import { getJourneyBySlug, getJourneyStep } from "@/lib/learning/journeyRepository";
-import { nextStep, prevStep } from "@/lib/learning/journeyEngine";
 import { StoryPanel } from "./StoryPanel";
 import { Timeline } from "./Timeline";
 import { HistoryMap } from "./HistoryMap";
 import { PersonLifespanTimeline } from "./PersonLifespanTimeline";
 import { ContemporaryWorldPanel } from "./ContemporaryWorldPanel";
-import { Icon } from "@/components/ui/icons";
 
 /**
  * V0.3 — Journey Explorer.
@@ -69,8 +67,6 @@ export function JourneyExplorer({ className = "" }: { className?: string }) {
     });
   };
 
-  const canPrev = prevStep(journey, step.order) !== null;
-  const canNext = nextStep(journey, step.order) !== null;
   const progress = `${step.order} / ${journey.steps.length}`;
 
   return (
@@ -118,24 +114,6 @@ export function JourneyExplorer({ className = "" }: { className?: string }) {
               title={s.title}
             />
           ))}
-          <span className="ml-auto flex gap-2">
-            <button
-              onClick={() => goTo(step.order - 1)}
-              disabled={!canPrev}
-              className="btn-ghost !px-3 !py-1 text-xs disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label={t("journey.previous")}
-            >
-              <Icon name="arrow-right" className="h-3.5 w-3.5 rotate-180" />
-            </button>
-            <button
-              onClick={() => goTo(step.order + 1)}
-              disabled={!canNext}
-              className="btn-primary !px-3 !py-1 text-xs disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label={t("journey.continue")}
-            >
-              <Icon name="arrow-right" className="h-3.5 w-3.5" />
-            </button>
-          </span>
         </nav>
       </section>
 

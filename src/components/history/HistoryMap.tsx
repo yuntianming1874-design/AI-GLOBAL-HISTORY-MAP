@@ -20,6 +20,7 @@ import { LocationModal } from "./LocationModal";
 import { RouteModal } from "./RouteModal";
 import { CivilizationModal } from "./CivilizationModal";
 import { EventModal } from "./EventModal";
+import { cachedFetchJson } from "./fetchCache";
 
 const TANG_ERA_RANGE: [number, number] = [618, 907];
 
@@ -76,26 +77,11 @@ export function HistoryMap({ className = "" }: { className?: string }) {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/api/events").then((r) => {
-        if (!r.ok) throw new Error("events");
-        return r.json();
-      }),
-      fetch("/api/civilizations").then((r) => {
-        if (!r.ok) throw new Error("civilizations");
-        return r.json();
-      }),
-      fetch("/api/locations").then((r) => {
-        if (!r.ok) throw new Error("locations");
-        return r.json();
-      }),
-      fetch("/api/territories").then((r) => {
-        if (!r.ok) throw new Error("territories");
-        return r.json();
-      }),
-      fetch("/api/people").then((r) => {
-        if (!r.ok) throw new Error("people");
-        return r.json();
-      }),
+      cachedFetchJson("/api/events"),
+      cachedFetchJson("/api/civilizations"),
+      cachedFetchJson("/api/locations"),
+      cachedFetchJson("/api/territories"),
+      cachedFetchJson("/api/people"),
     ])
       .then(([evts, civs, locs, ters, ps]) => {
         if (cancelled) return;

@@ -32,7 +32,14 @@ export interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-function ProviderInner({ children }: { children: React.ReactNode }) {
+function ProviderInner({
+  children,
+  defaultLocale,
+}: {
+  children: React.ReactNode;
+  /** Server-detected browser language (Accept-Language) — lowest priority. */
+  defaultLocale: Locale;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -41,7 +48,7 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
   // for dynamic pages → SSR renders the right locale without mismatch);
   // localStorage persistence is merged in after mount.
   const [locale, setLocaleState] = useState<Locale>(() =>
-    detectLocale(searchParams?.get("lang") ?? null, null),
+    detectLocale(searchParams?.get("lang") ?? null, null, defaultLocale),
   );
 
   /* merge persisted locale after hydration (URL param wins) */
@@ -52,7 +59,11 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
     } catch {
       /* storage unavailable */
     }
-    const resolved = detectLocale(searchParams?.get("lang") ?? null, stored);
+    const resolved = detectLocale(
+      searchParams?.get("lang") ?? null,
+      stored,
+      defaultLocale,
+    );
     setLocaleState(resolved);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
@@ -86,13 +97,20 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
+export function LocaleProvider({
+  children,
+  defaultLocale = "en",
+}: {
+  children: React.ReactNode;
+  defaultLocale?: Locale;
+}) {
   return (
     <Suspense fallback={null}>
-      <ProviderInner>{children}</ProviderInner>
+      <ProviderInner defaultLocale={defaultLocale}>{children}</ProviderInner>
     </Suspense>
   );
 }
+
 
 export function useLocale(): LocaleContextValue {
   const value = useContext(LocaleContext);

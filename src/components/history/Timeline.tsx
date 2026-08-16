@@ -15,6 +15,7 @@ import { useLocale } from "./LocaleProvider";
 import type { TranslationKey } from "@/lib/i18n";
 import { EmptyBlock, ErrorBlock, LoadingBlock } from "@/components/ui/primitives";
 import { EventModal } from "./EventModal";
+import { cachedFetchJson } from "./fetchCache";
 
 const LABEL_W = 116;
 const ROW_H = 26;
@@ -75,18 +76,9 @@ export function Timeline({ className = "" }: { className?: string }) {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/api/events").then((r) => {
-        if (!r.ok) throw new Error("events");
-        return r.json();
-      }),
-      fetch("/api/civilizations").then((r) => {
-        if (!r.ok) throw new Error("civilizations");
-        return r.json();
-      }),
-      fetch("/api/people").then((r) => {
-        if (!r.ok) throw new Error("people");
-        return r.json();
-      }),
+      cachedFetchJson("/api/events"),
+      cachedFetchJson("/api/civilizations"),
+      cachedFetchJson("/api/people"),
     ])
       .then(([evts, civs, ps]) => {
         if (cancelled) return;

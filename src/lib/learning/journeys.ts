@@ -7,9 +7,8 @@
  * 标题强调 751 年唐朝与阿拔斯王朝、中亚世界在同一时刻的相遇与连接。
  *
  * 只引用 seed 中已存在并经 provenance 审核的实体 id（events / people /
- * civilizations / locations）。narrative 中可以提到历史人物姓名（如高仙芝），
- * 但绝不把它们作为可点击实体——高仙芝尚未通过人工 provenance 审核，
- * 因此不出现在任何 entityId 字段中。
+ * civilizations / locations）。高仙芝已于 P2-14 通过人工来源审核入库
+ * （p-gao-xianzhi），可作为可点击实体引用。
  */
 import type { Journey } from "./journeyTypes";
 
@@ -44,9 +43,9 @@ export const JOURNEYS: Journey[] = [
         title: "唐帝国进入中亚",
         titleEn: "The Tang Empire Moves into Central Asia",
         narrative:
-          "618 年唐朝建立后，历代皇帝沿丝绸之路向西推进：630 年灭东突厥，640 年代设安西都护府，把安西四镇（龟兹、疏勒、于阗、焉耆）纳入版图。到 8 世纪中叶，唐朝的势力已深入中亚腹地，与当地政权及西进的阿拉伯势力正面相遇。唐军将领如高仙芝正是在这样的背景下远赴中亚——但请注意，高仙芝尚未通过人工史料审核，本旅程不把他列为可点击人物。",
+          "618 年唐朝建立后，历代皇帝沿丝绸之路向西推进：630 年灭东突厥，640 年代设安西都护府，把安西四镇（龟兹、疏勒、于阗、焉耆）纳入版图。到 8 世纪中叶，唐朝的势力已深入中亚腹地，与当地政权及西进的阿拉伯势力正面相遇。唐军将领如高仙芝正是在这样的背景下远赴中亚——高仙芝已经人工审核入库，你可以通过「相关人物」深入了解他。",
         narrativeEn:
-          "After the Tang was founded in 618, successive emperors pushed west along the Silk Road: the Eastern Turks were subdued in 630, and the Protectorate General of Anxi was established in the 640s with the Four Garrisons (Kucha, Kashgar, Khotan, Karasahr) incorporated. By the mid-8th century Tang power reached deep into Central Asia, bringing it face to face with the westward-moving Arab caliphate. Generals such as Gao Xianzhi campaigned in this frontier — but Gao Xianzhi has not yet passed human provenance review, so this journey does not list him as a clickable person.",
+          "After the Tang was founded in 618, successive emperors pushed west along the Silk Road: the Eastern Turks were subdued in 630, and the Protectorate General of Anxi was established in the 640s with the Four Garrisons (Kucha, Kashgar, Khotan, Karasahr) incorporated. By the mid-8th century Tang power reached deep into Central Asia, bringing it face to face with the westward-moving Arab caliphate. Generals such as Gao Xianzhi campaigned in this frontier — Gao Xianzhi has now passed human provenance review and is a clickable person in this journey.",
         question: "唐朝是如何一步步进入中亚的？",
         questionEn: "How did the Tang empire gradually reach into Central Asia?",
         whyImportant: "理解唐朝向西推进的过程，才能理解 751 年怛罗斯之战为什么发生在中亚而不是唐朝边境——向西的每一步扩张，都让唐朝与伊斯兰世界的相遇更近一步。",
@@ -88,8 +87,8 @@ export const JOURNEYS: Journey[] = [
         nextStepReason: "一场战役的胜负取决于双方背后的世界——下一步，我们把唐朝与阿拔斯王朝放进中亚的棋盘，看看 751 年前后的完整图景。",
         nextStepReasonEn:
           "A battle's outcome depends on the worlds behind both sides — next, we place Tang and the Abbasids on the Central Asian board to see the full picture around 751.",
-        keyFactEntityIds: ["e-751-talas", "loc-talas", "c-tang", "c-abbasid"],
-        people: [],
+        keyFactEntityIds: ["e-751-talas", "p-gao-xianzhi", "loc-talas", "c-tang", "c-abbasid"],
+        people: ["p-gao-xianzhi"],
         locations: ["loc-talas"],
         civilizations: ["c-tang", "c-abbasid"],
         year: 751,
@@ -100,6 +99,7 @@ export const JOURNEYS: Journey[] = [
         civilizationId: "c-tang",
         surroundingEntities: [
           { id: "e-751-talas", type: "event" },
+          { id: "p-gao-xianzhi", type: "person" },
           { id: "loc-talas", type: "location" },
           { id: "c-tang", type: "civilization" },
           { id: "c-abbasid", type: "civilization" },

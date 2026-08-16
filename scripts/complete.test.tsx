@@ -44,9 +44,10 @@ check("e-750-abbasid-revolution explored", stats.eventsExplored.some((e) => e.id
 check("e-630-eastern-turks explored", stats.eventsExplored.some((e) => e.id === "e-630-eastern-turks"), true);
 check("event labels bilingual", stats.eventsExplored[0]?.labelZh.length > 0 && stats.eventsExplored[0]?.labelEn.length > 0, true);
 
-/* people: p-abu-muslim from step3 surrounding entities */
-check("Abu Muslim explored", stats.peopleExplored.some((p) => p.id === "p-abu-muslim"), true);
-check("people labels", stats.peopleExplored[0]?.labelZh, "阿布·穆斯林");
+/* people: Gao Xianzhi (step2 participant) + Abu Muslim (step3) */
+check("Gao Xianzhi explored (step2)", stats.peopleExplored.some((p) => p.id === "p-gao-xianzhi"), true);
+check("Abu Muslim explored (step3)", stats.peopleExplored.some((p) => p.id === "p-abu-muslim"), true);
+check("people labels zh", stats.peopleExplored.find((p) => p.id === "p-gao-xianzhi")?.labelZh, "高仙芝");
 
 /* civilizations: c-tang / c-abbasid / c-carolingian / c-japan / c-maya */
 check("Tang explored", stats.civilizationsExplored.some((c) => c.id === "c-tang"), true);

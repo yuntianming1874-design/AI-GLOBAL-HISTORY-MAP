@@ -208,7 +208,7 @@ const CIV_NAME_TYPES: Record<string, { nameType: string; note: string; authority
 const KEY_PEOPLE = [
   "p-taizong", "p-wu-zetian", "p-xuanzong", "p-li-bai", "p-du-fu",
   "p-an-lushan", "p-xuanzang", "p-charlemagne", "p-harun-al-rashid",
-  "p-abu-muslim", "p-muhammad",
+  "p-abu-muslim", "p-muhammad", "p-gao-xianzhi",
 ];
 /** 关键事件首批审计名单（规格 §十四）。 */
 const KEY_EVENTS = [

@@ -127,4 +127,6 @@ export const EXTRA_ALIASES: HistoryEntityAlias[] = [
   { entityId: "c-vikings", alias: "Vikings" },
   { entityId: "c-umayyad", alias: "倭马亚" },
   { entityId: "c-umayyad", alias: "Umayyads" },
+  { entityId: "p-gao-xianzhi", alias: "高仙芝" },
+  { entityId: "p-gao-xianzhi", alias: "Gao Xianzhi" },
 ];

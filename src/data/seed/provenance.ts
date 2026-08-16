@@ -196,6 +196,42 @@ export const PERSON_PROVENANCE: Record<string, PersonProvenance> = {
       confidence: "high",
     },
   },
+  "p-gao-xianzhi": {
+    birth: {
+      precision: "unknown",
+      confidence: "unverified",
+      note: "史书未载生年（《旧唐书》《新唐书》皆自其成年任安西副都护记起）；通行辞书多标（？—756）。",
+    },
+    death: {
+      year: 756,
+      precision: "exact",
+      confidence: "medium",
+      note: "756 年正月，唐玄宗听信边令诚谗言，于潼关前线赐死高仙芝、封常清（《旧唐书·高仙芝传》）。",
+    },
+    roles: [
+      {
+        personId: "p-gao-xianzhi",
+        role: "Anxi Jiedushi 安西都护（四镇节度使）",
+        validFrom: { year: 747, precision: "approximate", confidence: "medium" },
+        validTo: { year: 756, precision: "approximate", confidence: "medium" },
+        confidence: "medium",
+      },
+    ],
+    sources: [
+      {
+        entityId: "p-gao-xianzhi",
+        entityType: "person",
+        factKey: "life",
+        sourceTitle: "《旧唐书》卷一〇四（高仙芝传）",
+        sourceUrl: "https://zh.wikisource.org/wiki/舊唐書/卷104",
+        sourceType: "primary",
+        authorityLevel: "A",
+        reviewStatus: "verified",
+        reviewedAt: "2026-08-16",
+        note: "生年未载 + 756 年赐死的核心记载；与 e-751-talas 的来源相同卷目。",
+      },
+    ],
+  },
   "p-gaozu": {
     birth: {
       year: 566,

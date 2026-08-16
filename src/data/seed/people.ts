@@ -307,6 +307,18 @@ const peopleRaw: Person[] = [
     summary:
       "The Varangian prince who made Kiev the capital of the Rus' and struck against Constantinople in 907.",
   },
+  {
+    id: "p-gao-xianzhi",
+    name: "Gao Xianzhi",
+    chineseName: "高仙芝",
+    birthYear: null,
+    deathYear: 756,
+    role: "Anxi Jiedushi",
+    importance: 4,
+    civilizationId: "c-tang",
+    summary:
+      "Tang frontier general who commanded the Anxi army at the Battle of Talas (751) and was executed in 756 after the loss of the Tong Pass.",
+  },
 ];
 
 export const people: Person[] = peopleRaw.map((p) => ({

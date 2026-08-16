@@ -380,7 +380,7 @@ if (total < 100) errors.push(`total entities ${total} < 100 (requirement)`);
 if (civilizations.length < 12) errors.push(`civilizations ${civilizations.length} < 12`);
 if (locations.length < 15) errors.push(`locations ${locations.length} < 15`);
 if (events.length < 48) errors.push(`events ${events.length} < 48`);
-if (people.length !== 25) errors.push(`people ${people.length} != 25`);
+if (people.length !== 26) errors.push(`people ${people.length} != 26`);
 if (relationships.length !== 40) errors.push(`relationships ${relationships.length} != 40`);
 
 for (const c of civilizations) {

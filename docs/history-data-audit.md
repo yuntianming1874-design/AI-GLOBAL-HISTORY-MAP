@@ -317,7 +317,7 @@
 
 ## V0.2.2 Provenance 深度检查
 
-- 检查实体 21 个（关键人物 11 + 关键事件 10）：全部 PASS
+- 检查实体 21 个（关键人物 12 + 关键事件 10）：全部 PASS
 - UNVERIFIED MISSING_SOURCES entity_sources 填充状态（V0.2.2）：provenance 深度检查实体 21 个：0 个不一致；全部一致——precision/confidence/角色时间线/年份与知识库吻合；entity_sources 第一批已建：5 个 Journey 关键实体（c-tang、c-abbasid、e-751-talas、p-abu-muslim、loc-talas）携带真实史料/学术著作名（《旧唐书》《资治通鉴》、al-Tabari、Kennedy、Shaban 等），sourceUrl 一律 null + reviewStatus=pending（禁止猜测 URL）；待人工复核：Charlemagne 出生（742/747/748）、武曌生年（623/624/625）、Abu Muslim 生年（700/718/723）、Oleg 生年（unknown）
 
 ## 修正建议（待人工确认后才进入 seed）

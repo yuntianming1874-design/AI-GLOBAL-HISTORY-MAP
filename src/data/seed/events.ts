@@ -415,7 +415,10 @@ const eventsRaw: HistoricalEvent[] = [
     tags: ["talas", "abbasid", "silk-road", "paper"],
     description:
       "In 751 Tang forces under Gao Xianzhi met an Abbasid army at the Talas River in Central Asia and were routed, ending Tang expansion to the west. Legend holds that captured Chinese artisans carried paper-making to Samarkand, whence it spread across the Islamic world and into Europe. Talas marked the frontier where the Chinese and Islamic worlds settled into lasting coexistence.",
-    participants: [],
+    participants: ["p-gao-xianzhi"],
+    participantRoles: {
+      "p-gao-xianzhi": "participant",
+    },
   },
   {
     id: "e-755-anlushan",

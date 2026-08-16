@@ -124,7 +124,7 @@ for (const j of [journey]) {
     allRefs.push(...s.surroundingEntities);
   }
 }
-check("8. Gao Xianzhi id is NOT a known entity", isKnownEntityId("p-gao-xianzhi"), false);
+check("8. Gao Xianzhi IS a known entity (P2-14, human-reviewed)", isKnownEntityId("p-gao-xianzhi"), true);
 check("8. no fabricated person id", allRefs.filter((r) => r.type === "person").every((r) => isKnownEntityId(r.id)), true);
 check("8. every referenced id known", allRefs.every((r) => isKnownEntityId(r.id)), true);
 check("8. every ref type matches", allRefs.every((r) => isValidEntityRef(r as never)), true);

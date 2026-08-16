@@ -27,6 +27,7 @@ export const zhPersonSummaries: Record<string, string> = {
   "p-cyril": "拜占庭学者兼传教士，与其兄美多德创制斯拉夫字母，并将礼拜仪式译成斯拉夫语。",
   "p-methodius": "西里尔的兄长和传教同伴，出任摩拉维亚大主教，捍卫斯拉夫语礼拜仪式。",
   "p-oleg": "瓦良格（罗斯）王公，定都基辅，907年率军攻打君士坦丁堡。",
+  "p-gao-xianzhi": "唐朝安西都护府将领，751 年怛罗斯之战的唐军统帅；756 年被唐玄宗赐死。",
 };
 
 export const zhRelationshipDescriptions: Record<string, string> = {
@@ -99,4 +100,5 @@ export const zhPersonRoles: Record<string, string> = {
   "p-cyril": "传教士",
   "p-methodius": "传教士",
   "p-oleg": "基辅王公",
+  "p-gao-xianzhi": "安西都护",
 };

@@ -16,6 +16,7 @@ import {
   relationships,
   territories,
 } from "../src/data/seed";
+import { ENTITY_SOURCES } from "../src/data/seed/entitySources";
 import { zhCivilizationSummaries } from "../src/data/seed/zhMisc";
 import { zhLocationDescriptions } from "../src/data/seed/zhMisc";
 import { zhTerritoryNames } from "../src/data/seed/zhMisc";
@@ -128,6 +129,21 @@ async function main() {
       );
     }
     console.log(`✓ territories: ${territories.length}`);
+
+    // V0.2.2 → P2-12: 实体来源层（URL 一律 null + pending，待人工确认）
+    for (const src of ENTITY_SOURCES) {
+      await client.query(
+        `INSERT INTO entity_sources (id, entity_id, entity_type, fact_key, source_title, source_url, source_type, authority_level, review_status, note)
+         VALUES (gen_random_uuid(), $1,$2,$3,$4,$5,$6,$7,$8,$9)
+         ON CONFLICT DO NOTHING`,
+        [
+          src.entityId, src.entityType, src.factKey ?? null, src.sourceTitle,
+          src.sourceUrl ?? null, src.sourceType, src.authorityLevel,
+          src.reviewStatus, src.note ?? null,
+        ],
+      );
+    }
+    console.log(`✓ entity_sources: ${ENTITY_SOURCES.length}`);
 
     // normalized join table (idempotent rebuild) with roles
     await client.query("DELETE FROM events_people");

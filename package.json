@@ -27,7 +27,8 @@
     "test:navigator": "tsx scripts/navigator.test.ts",
     "test:assistant-navigator": "tsx scripts/assistant-navigator.test.ts",
     "test:recommendations-ui": "esbuild scripts/recommendations-ui.test.tsx --bundle --platform=node --format=cjs --jsx=automatic --packages=external --outfile=.tmp-rec-test.cjs && node scripts/rec-ui-harness.cjs && rm -f .tmp-rec-test.cjs",
-    "test:openai-path": "tsx scripts/openai-path.test.ts"
+    "test:openai-path": "tsx scripts/openai-path.test.ts",
+    "test:entity-sources": "tsx scripts/entity-sources.test.ts"
   },
   "dependencies": {
     "d3": "^7.9.0",

@@ -80,6 +80,9 @@ jobs:
       - name: Test OpenAI path (mock endpoint)
         run: npm run test:openai-path
 
+      - name: Test entity sources
+        run: npm run test:entity-sources
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 

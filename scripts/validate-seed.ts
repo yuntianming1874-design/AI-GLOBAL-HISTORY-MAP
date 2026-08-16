@@ -312,6 +312,45 @@ for (const c of civilizations) {
   }
 }
 
+/* ── V0.2.2 → P2-12：entity_sources 数据校验 ──────────────────────────── */
+import { ENTITY_SOURCES } from "../src/data/seed/entitySources";
+
+const SOURCE_TYPES = ["primary", "peer_reviewed", "university_press", "museum", "reference", "web"];
+const AUTHORITY = ["A", "B", "C", "D", "E"];
+const REVIEW = ["verified", "pending"];
+{
+  const seenSrc = new Set<string>();
+  for (const src of ENTITY_SOURCES) {
+    if (!idKind.has(src.entityId)) {
+      errors.push(`entity source: unknown entity ${src.entityType}:${src.entityId}`);
+    }
+    if (src.entityType !== idKind.get(src.entityId)) {
+      errors.push(`entity source: type mismatch for ${src.entityId} (${src.entityType} vs ${idKind.get(src.entityId)})`);
+    }
+    if (!src.sourceTitle || src.sourceTitle.trim().length < 3) {
+      errors.push(`entity source ${src.entityId}: empty sourceTitle`);
+    }
+    if (src.sourceUrl !== undefined && src.sourceUrl !== null) {
+      if (!/^https?:\/\//.test(src.sourceUrl)) {
+        errors.push(`entity source ${src.entityId}: sourceUrl 非法（必须 null 或 http(s) 链接）`);
+      }
+    }
+    if (!SOURCE_TYPES.includes(src.sourceType)) {
+      errors.push(`entity source ${src.entityId}: invalid sourceType ${src.sourceType}`);
+    }
+    if (!AUTHORITY.includes(src.authorityLevel)) {
+      errors.push(`entity source ${src.entityId}: invalid authorityLevel ${src.authorityLevel}`);
+    }
+    if (!REVIEW.includes(src.reviewStatus)) {
+      errors.push(`entity source ${src.entityId}: invalid reviewStatus ${src.reviewStatus}`);
+    }
+    const key = `${src.entityId}|${src.factKey ?? ""}|${src.sourceTitle}`;
+    if (seenSrc.has(key)) errors.push(`entity source: duplicate ${key}`);
+    seenSrc.add(key);
+  }
+  if (ENTITY_SOURCES.length < 10) warnings.push(`entity sources 仅 ${ENTITY_SOURCES.length} 条（目标 ≥10）`);
+}
+
 /* alias integrity */
 const aliasIds = new Set<string>();
 for (const a of EXTRA_ALIASES) {

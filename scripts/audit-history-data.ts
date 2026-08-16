@@ -602,7 +602,7 @@ add({
   details: [
     `provenance 深度检查实体 ${provChecks} 个：${provMismatch.length} 个不一致`,
     provMismatch.length > 0 ? `不一致清单：${provMismatch.join("、")}` : "全部一致——precision/confidence/角色时间线/年份与知识库吻合",
-    "entity_sources 表已建（含 fact_key/review_status 列）但尚无人工确认的来源行；sourceUrl 一律 null + reviewStatus=pending（禁止猜测 URL）",
+    "entity_sources 第一批已建：5 个 Journey 关键实体（c-tang、c-abbasid、e-751-talas、p-abu-muslim、loc-talas）携带真实史料/学术著作名（《旧唐书》《资治通鉴》、al-Tabari、Kennedy、Shaban 等），sourceUrl 一律 null + reviewStatus=pending（禁止猜测 URL）",
     "待人工复核：Charlemagne 出生（742/747/748）、武曌生年（623/624/625）、Abu Muslim 生年（700/718/723）、Oleg 生年（unknown）",
   ],
   authority: "E",

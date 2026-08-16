@@ -10,6 +10,9 @@ import type {
 } from "@/lib/types";
 import { RELATIONSHIP_META } from "@/lib/theme";
 import { formatHistoricalDate, formatLifespan } from "@/lib/provenance";
+import { civilizations as seedCivs } from "@/data/seed";
+
+const civZh = new Map(seedCivs.map((c) => [c.id, c.chineseName]));
 import { computeContemporaries } from "@/lib/contemporaries";
 import type { TranslationKey } from "@/lib/i18n";
 import { zhPersonRoles } from "@/data/seed/zhPeopleRelationships";
@@ -65,8 +68,13 @@ export function PersonDrawer({
         seen.add(e.locationId);
         out.push({
           locationId: e.locationId,
-          name: e.locationName ?? e.locationId,
-          event: e.title,
+          name:
+            locale === "zh"
+              ? (locations.find((l) => l.id === e.locationId)?.chineseName ??
+                e.locationName ??
+                e.locationId)
+              : (e.locationName ?? e.locationId),
+          event: locale === "zh" ? e.chineseTitle : e.title,
         });
       }
     }
@@ -75,13 +83,18 @@ export function PersonDrawer({
       if (seat && !seen.has(seat.id)) {
         out.push({
           locationId: seat.id,
-          name: seat.name,
-          event: t("dr.seatOf", { civ: person.civilizationName ?? "—" }),
+          name: locale === "zh" ? seat.chineseName : seat.name,
+          event: t("dr.seatOf", {
+            civ:
+              locale === "zh"
+                ? (civZh.get(person.civilizationId ?? "") ?? person.civilizationName ?? "—")
+                : (person.civilizationName ?? "—"),
+          }),
         });
       }
     }
     return out;
-  }, [person, eventsByPerson, locations, t]);
+  }, [person, eventsByPerson, locations, t, locale]);
 
   const contemporaries = useMemo(
     () => (person ? computeContemporaries(person.id, people, allEvents) : []),
@@ -133,7 +146,13 @@ export function PersonDrawer({
               </h3>
               <p className="mt-0.5 text-xs text-ink-faint">
                 {zh(person.chineseName, person.name)} · {locale === "zh" ? (zhPersonRoles[person.id] ?? person.role) : person.role}
-                {person.civilizationName ? ` · ${person.civilizationName}` : ""}
+                {person.civilizationName
+                  ? ` · ${
+                      locale === "zh"
+                        ? (civZh.get(person.civilizationId ?? "") ?? person.civilizationName)
+                        : person.civilizationName
+                    }`
+                  : ""}
               </p>
               {person.provenance?.roles && person.provenance.roles.length > 0 && (
                 <ul className="mt-1.5 space-y-0.5">
@@ -342,7 +361,7 @@ export function PersonDrawer({
                       className="h-2 w-2 rounded-full"
                       style={{ backgroundColor: c.civilizationColor ?? "#8a7a66" }}
                     />
-                    {c.name}
+                    {zh(c.name, c.chineseName)}
                   </button>
                 ))}
               </div>

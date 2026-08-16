@@ -450,9 +450,9 @@ export function Timeline({ className = "" }: { className?: string }) {
                       fill={civ.color}
                       opacity={0.14}
                     />
-                    <circle cx={LABEL_W - 14} cy={y0} r={3} fill={civ.color} />
+                    <circle cx={LABEL_W - 10} cy={y0} r={3} fill={civ.color} />
                     <text
-                      x={LABEL_W - 8}
+                      x={LABEL_W - 22}
                       y={y0 + 3.5}
                       textAnchor="end"
                       className="fill-ink-soft"

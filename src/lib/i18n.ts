@@ -253,6 +253,7 @@ const DICT = {
   /* journey (V0.3) */
   "journey.badge": { en: "Learning Journey", zh: "学习旅程" },
   "journey.stepOf": { en: "Step {step} / {total}", zh: "第 {step} / {total} 步" },
+  "journey.stepN": { en: "Step {n}", zh: "第 {n} 步" },
   "journey.progress": { en: "Progress {p}", zh: "进度 {p}" },
   "journey.exit": { en: "Exit journey", zh: "退出旅程" },
   "journey.previous": { en: "Previous", zh: "← 上一步" },

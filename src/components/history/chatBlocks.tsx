@@ -133,7 +133,7 @@ export function ActionButtons({ actions }: { actions: HistoryNavigationAction[] 
                         : action.type === "START_JOURNEY"
                           ? t("journey.start")
                           : action.type === "SET_JOURNEY_STEP"
-                            ? t("journey.stepOf", { step: action.step, total: "?" })
+                            ? t("journey.stepN", { n: action.step })
                             : t("act.focusCiv")}
         </button>
       ))}

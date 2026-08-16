@@ -50,6 +50,35 @@ Chinese; PostgreSQL mirrors the same texts via `*_zh` columns.
 
 ![stack](https://img.shields.io/badge/Next.js%2014-TypeScript%20strict-000) ![viz](https://img.shields.io/badge/D3.js%20v7-Mapbox%20GL-e34c26) ![data](https://img.shields.io/badge/149%20entities-12%20civilizations-2f8f6b)
 
+## V0.2.2 — Historical Provenance Layer
+
+Every date carries precision + confidence (`exact / approximate / range / century /
+unknown` × `high / medium / low / disputed / unverified`): disputed dates display
+"存在学术争议" (e.g. Charlemagne's birth 747–748, alternatives 742/747/748), unknown
+dates display "年代不详" (e.g. Oleg's birth). People carry `PersonRole[]` timelines
+(Charlemagne: King of the Franks 768 → King of the Lombards 774 → Emperor 800).
+A curated source model (`entity_sources` + `fact_key` / `review_status`) forbids
+guessing URLs. See [`docs/history-provenance.md`](docs/history-provenance.md) and the
+audit report [`docs/history-data-audit.md`](docs/history-data-audit.md)
+(`npm run audit:history`).
+
+## V0.3 — Historical Learning Experience
+
+- **Learning Journeys**: the flagship journey 《公元 751 年：唐朝与世界的交汇》
+  (`/journeys/talas-751`) walks time → map → Talas → Tang vs Abbasid → world
+  contemporaries → review, with step state in the URL (`?journey=&step=`) and a
+  Complete page with learning stats + core memories.
+- **Recall**: `/journeys/talas-751/review` — 5 retrieval-practice questions graded
+  correct / partially correct / needs review (never exam-style), with review
+  shortcuts back to timeline / map / people.
+- **World Context**: "751 年，世界不同地区发生了什么？" per-region panel built
+  from curated data only (regions without data say so).
+- **Person Lifespan Timeline** (provenance `PersonRole[]` spans + events).
+- **AI Historical Navigator**: every chat answer ships deterministic next-step
+  recommendations (deepen / cause / compare / continue) built from the seed
+  registry — the LLM can never invent entity ids, journeys or dates; cause
+  recommendations are human-audited (`docs/history-navigator-audit.md`).
+
 ## Quick Start (zero config)
 
 ```bash
@@ -177,6 +206,8 @@ UI and API never change.
 
 ## Roadmap
 
-V0.1 (MVP) → V0.2 (knowledge graph & cross-page interaction, **this release**) →
-Phase 2 (multi-era switching, accounts, saved timelines) → Phase 3 (RAG over live
-DB, spatial queries, i18n, PWA). See [`docs/roadmap.md`](docs/roadmap.md).
+V0.1 (MVP) → V0.2 (knowledge graph & cross-page interaction) → V0.2.2 (historical
+provenance layer) → **V0.3 (learning journeys, recall, world context, AI
+navigator — this release)** → next: more journeys (An Lushan Rebellion 755–763,
+Li Bai's life), entity_sources population, live-database deployment.
+See [`docs/roadmap.md`](docs/roadmap.md).

@@ -11,6 +11,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const accept = headers().get("accept-language") ?? "";
   const isZh = /\bzh(?:-|\b|$)/i.test(accept);
   return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ??
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
+    ),
     title: isZh
       ? "AI 全球历史地图 — 唐时代世界图集"
       : "AI Global History Map — Tang Era World Atlas",

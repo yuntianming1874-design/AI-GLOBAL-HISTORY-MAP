@@ -23,6 +23,24 @@
       Mapbox map and LLM chat activate automatically; `npm run validate:seed`
       passes; production build green — **all verified**.
 
+## V0.2.2 — Historical Provenance Layer ✅ (delivered)
+
+Unified `HistoricalDateValue` / `PersonRole[]` / `HistoricalSource` model, seed-wide
+provenance (25 people / 49 events / 12 civilizations), single date formatter for
+UI+AI, data-quality gates (`npm run validate:seed`) and a deeper provenance audit
+(`npm run audit:history`). Docs: `docs/history-provenance.md`.
+
+## V0.3 — Learning Journeys ✅ (delivered, Release Candidate)
+
+- Journey vertical slice 《公元 751 年：唐朝与世界的交汇》(`talas-751`, 5 steps)
+  with URL state (`?journey=&step=`), Narrative Story Engine, World Context panel,
+  Person Lifespan Timeline, Journey Complete + Recall (5 questions),
+  Featured Journeys, deterministic AI Historical Navigator (deepen/cause/compare/
+  continue) with human-audited cause pairs.
+- RC gates: CI on GitHub Actions (25 steps incl. Playwright E2E 12/12), mock
+  OpenAI-path verification, navigator quality audit.
+- Tags: `v0.2.2`, `v0.3-phase2`, `v0.3-phase3a/b/c`, `v0.3-phase3d`, `v0.3-rc`.
+
 ## Phase 2 — Depth & Accounts
 - [x] **V0.2.1 — Knowledge-graph depth** (delivered)
   - [x] Data: `events_people` join consumed as the single participant source in

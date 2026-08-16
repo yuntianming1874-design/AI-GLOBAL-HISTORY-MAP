@@ -5,6 +5,18 @@ import type { ChatMessage, ChatResponse } from "@/lib/types";
 import { Icon } from "@/components/ui/icons";
 import { useExplorer } from "./ExplorerProvider";
 import { useLocale } from "./LocaleProvider";
+import {
+  civilizations as seedCivs,
+  events as seedEvents,
+  locations as seedLocs,
+  people as seedPeople,
+} from "@/data/seed";
+
+const entityZh = new Map<string, string>();
+for (const e of seedEvents) entityZh.set(e.id, e.chineseTitle);
+for (const p of seedPeople) entityZh.set(p.id, p.chineseName);
+for (const c of seedCivs) entityZh.set(c.id, c.chineseName);
+for (const l of seedLocs) entityZh.set(l.id, l.chineseName);
 import { ActionButtons, EntityLinks, RecommendationsBlock, RichText } from "./chatBlocks";
 
 interface UiMessage extends ChatMessage {
@@ -49,12 +61,18 @@ export function AIChat({ className = "" }: { className?: string }) {
     });
   }, [messages, busy]);
 
+  const entityName = (id: string | null) =>
+    id ? (locale === "zh" ? entityZh.get(id) ?? id : id) : null;
   const contextNote = [
-    context.year !== null ? `year ${context.year}` : null,
-    context.eventId ? `event ${context.eventId}` : null,
-    context.personId ? `person ${context.personId}` : null,
-    context.civilizationId ? `civilization ${context.civilizationId}` : null,
-    context.locationId ? `location ${context.locationId}` : null,
+    context.eventId ? entityName(context.eventId) : null,
+    context.personId ? entityName(context.personId) : null,
+    context.civilizationId ? entityName(context.civilizationId) : null,
+    context.locationId ? entityName(context.locationId) : null,
+    context.year !== null
+      ? locale === "zh"
+        ? `${context.year} 年`
+        : `year ${context.year}`
+      : null,
   ]
     .filter(Boolean)
     .join(" · ");

@@ -135,6 +135,15 @@ export function HomeView({
         subtitle={t("sec.comparison.subtitle")}
       >
         <ComparisonPanel />
+        <div className="mt-3 text-right">
+          <Link
+            href="/world?year=751"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-vermilion-dark hover:underline"
+          >
+            {t("home.worldYearLink")}
+            <Icon name="arrow-right" className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </Section>
 
       {/* featured events */}

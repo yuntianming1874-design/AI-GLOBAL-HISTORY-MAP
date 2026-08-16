@@ -31,7 +31,7 @@ export function CivilizationModal({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={civilization.name}
+      aria-label={locale === "zh" ? civilization.chineseName : civilization.name}
     >
       <div
         className="relative w-full max-w-md rounded-2xl bg-parchment-50 p-5 shadow-pop"
@@ -51,10 +51,7 @@ export function CivilizationModal({
             style={{ backgroundColor: civilization.color }}
             aria-hidden="true"
           />
-          {civilization.name}
-          <span className="font-sans text-sm font-normal text-ink-faint">
-            {civilization.chineseName}
-          </span>
+          {locale === "zh" ? civilization.chineseName : civilization.name}
         </h3>
         <p className="mt-1 font-mono text-xs text-ink-faint">
           {locale === "zh" ? (zhRegionNames[civilization.region] ?? civilization.region) : civilization.region} · {formatYear(civilization.startYear)} –{" "}

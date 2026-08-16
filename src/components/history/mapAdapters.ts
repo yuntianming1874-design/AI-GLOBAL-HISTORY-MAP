@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { locations as seedLocations } from "@/data/seed";
+import { civilizations as seedCivilizations, locations as seedLocations } from "@/data/seed";
 import type { GeoJSONSource } from "mapbox-gl";
 import type { Civilization, EventDTO, TerritoryDTO } from "@/lib/types";
 import { CATEGORY_META } from "@/lib/theme";
@@ -148,6 +148,7 @@ export function createD3Map(
   );
 
   const locZhName = new Map(seedLocations.map((l) => [l.id, l.chineseName]));
+const civZhName = new Map(seedCivilizations.map((c) => [c.id, c.chineseName]));
 
   const tooltip = d3
     .select(container)
@@ -345,7 +346,11 @@ export function createD3Map(
       .on("click", (_, d) => handlers.onEventClick(d.id))
       .on("mouseenter", (ev, d) => {
         showTooltip(
-          `${data.locale === "zh" ? d.chineseTitle : d.title} (${d.year}) · ${d.civilizationName}`,
+          `${data.locale === "zh" ? d.chineseTitle : d.title} (${d.year}) · ${
+            data.locale === "zh"
+              ? (civZhName.get(d.civilizationId) ?? d.civilizationName)
+              : d.civilizationName
+          }`,
           ev.clientX,
           ev.clientY,
         );

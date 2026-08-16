@@ -386,7 +386,7 @@ export function HistoryMap({ className = "" }: { className?: string }) {
                     className="h-2 w-2 rounded-full"
                     style={{ backgroundColor: active ? "#fff" : civ.color }}
                   />
-                  {civ.name}
+                  {zh(civ.name, civ.chineseName)}
                 </button>
               );
             })}
@@ -497,7 +497,11 @@ export function HistoryMap({ className = "" }: { className?: string }) {
           {personLocations.length > 0 && (
             <span className="flex flex-wrap items-center gap-1.5 rounded-full bg-gold/15 px-2 py-0.5 text-gold-dark">
               <span className="h-2 w-2 rounded-full bg-gold" />
-              {people?.find((p) => p.id === context.personId)?.name ?? ""} {t("map.personActivity")}:
+              {zh(
+                people?.find((p) => p.id === context.personId)?.name ?? "",
+                people?.find((p) => p.id === context.personId)?.chineseName ?? null,
+              )}{" "}
+              {t("map.personActivity")}:
               {personLocations.map((pl) => (
                 <button
                   key={pl.id}
@@ -583,7 +587,10 @@ export function HistoryMap({ className = "" }: { className?: string }) {
                             className="h-1.5 w-1.5 rounded-full"
                             style={{ backgroundColor: e.civilizationColor }}
                           />
-                          {e.civilizationName}
+                          {locale === "zh"
+                            ? (civilizations?.find((c) => c.id === e.civilizationId)?.chineseName ??
+                              e.civilizationName)
+                            : e.civilizationName}
                           <span className="text-gold-dark">
                             {"★".repeat(e.significance)}
                           </span>

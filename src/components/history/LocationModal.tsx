@@ -54,7 +54,7 @@ export function LocationModal({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={location.name}
+      aria-label={zh(location.name, location.chineseName)}
     >
       <div
         className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-parchment-50 p-5 shadow-pop"
@@ -70,8 +70,7 @@ export function LocationModal({
 
         <h3 className="flex items-center gap-2 font-display text-xl font-bold text-ink">
           <Icon name="map" className="h-5 w-5 text-vermilion" />
-          {location.name}
-          <span className="font-sans text-sm font-normal text-ink-faint">{location.chineseName}</span>
+          {zh(location.name, location.chineseName)}
         </h3>
         <p className="mt-1 text-xs text-ink-faint">
           {location.modernCountry} · {location.latitude.toFixed(2)}°, {location.longitude.toFixed(2)}°

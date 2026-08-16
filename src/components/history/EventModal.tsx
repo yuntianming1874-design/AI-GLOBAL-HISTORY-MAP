@@ -4,6 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { EventDTO } from "@/lib/types";
 import { EventCard } from "./EventCard";
+import { zhEventTags } from "@/data/seed/zhTags";
+import { people as seedPeople } from "@/data/seed";
+
+const personZh = new Map(seedPeople.map((p) => [p.id, p.chineseName]));
 import { Icon } from "@/components/ui/icons";
 import { useLocale } from "./LocaleProvider";
 
@@ -15,7 +19,7 @@ export function EventModal({
   event: EventDTO | null;
   onClose: () => void;
 }) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const router = useRouter();
   useEffect(() => {
     if (!event) return;
@@ -59,9 +63,11 @@ export function EventModal({
                 <Icon name="users" className="h-3.5 w-3.5" /> {t("em.keyPeople")}
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {event.participantsNames.map((name) => (
-                  <span key={name} className="chip">
-                    {name}
+                {event.participants.map((pid, i) => (
+                  <span key={pid} className="chip">
+                    {locale === "zh"
+                      ? personZh.get(pid) ?? event.participantsNames[i] ?? pid
+                      : event.participantsNames[i] ?? pid}
                   </span>
                 ))}
               </div>
@@ -82,7 +88,7 @@ export function EventModal({
               <div className="flex flex-wrap gap-1.5">
                 {event.tags.map((tag) => (
                   <span key={tag} className="chip !text-ink-faint">
-                    #{tag}
+                    #{locale === "zh" ? (zhEventTags[tag] ?? tag) : tag}
                   </span>
                 ))}
               </div>

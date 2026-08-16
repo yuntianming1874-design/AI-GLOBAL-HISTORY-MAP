@@ -8,6 +8,10 @@ import type {
 } from "@/lib/types";
 import { CATEGORY_META, formatYear } from "@/lib/theme";
 import { zhRegionNames } from "@/data/seed/zhMisc";
+import { zhEventTags } from "@/data/seed/zhTags";
+import { civilizations as seedCivs } from "@/data/seed";
+
+const civZh = new Map(seedCivs.map((c) => [c.id, c.chineseName]));
 import { formatYearSpan } from "@/lib/provenance";
 import { Icon } from "@/components/ui/icons";
 import { EventAIExplanation, EventMiniMap } from "./EventPageWidgets";
@@ -111,7 +115,7 @@ export function EventDetailView({
         <div className="mt-4 flex flex-wrap gap-1.5">
           {event.tags.map((tag) => (
             <span key={tag} className="chip !text-ink-faint">
-              #{tag}
+              #{locale === "zh" ? (zhEventTags[tag] ?? tag) : tag}
             </span>
           ))}
         </div>
@@ -148,7 +152,7 @@ export function EventDetailView({
                       </span>
                       <span className="text-sm font-semibold text-ink">{zh(e.title, e.chineseTitle)}</span>
                       <span className="ml-auto hidden text-[11px] text-ink-faint sm:block">
-                        {e.civilizationName}
+                        {locale === "zh" ? (civZh.get(e.civilizationId) ?? e.civilizationName) : e.civilizationName}
                       </span>
                     </Link>
                   </li>
@@ -164,7 +168,7 @@ export function EventDetailView({
                       </span>
                       <span className="text-sm font-semibold text-ink">{zh(e.title, e.chineseTitle)}</span>
                       <span className="ml-auto hidden text-[11px] text-ink-faint sm:block">
-                        🌍 {e.civilizationName}
+                        🌍 {locale === "zh" ? (civZh.get(e.civilizationId) ?? e.civilizationName) : e.civilizationName}
                       </span>
                     </Link>
                   </li>
@@ -205,7 +209,7 @@ export function EventDetailView({
                       title={t("dr.openProfile")}
                     >
                       <Icon name="users" className="h-3 w-3 text-vermilion" />
-                      {name}
+                      {zh(person.name, person.chineseName)}
                     </Link>
                   ) : (
                     <span key={name} className="chip">
